@@ -1,0 +1,42 @@
+eventsource:
+  name: "eventsource-sqs"
+  namespace: "gravity-system"
+  type: "sqs"
+  eventName: "example"
+  jsonBody: true
+  accessKey:
+    key: "accesskey"
+    name: "aws-secret-dev"
+  secretKey:
+    key: "secretkey"
+    name: "aws-secret-dev"
+  region: "us-east-1"
+  queue: "argo-event-source-demo"
+  waitTimeSeconds: 20
+
+sensor:
+  name: "sensor-sqs"
+  namespace: "gravity-system"
+  template:
+    serviceAccountName: "operate-workflow-sa"
+  dependencies:
+    name: "test-dep"
+    eventSourceName: "eventsource-sqs"
+    eventName: "example"
+  triggers:
+    template:
+      name: "sqs-workflow"
+      type: "argoWorkflow"
+      # operation: "submit"
+      # source: "configmap"
+  argoWorkFlow:
+    operation: "submit"
+    source: "configmap"
+    configmap:
+      name: wf-template-k8s
+      key: temp1
+    parameters:
+      src:
+        dependencyName: "test-dep"
+        dataKey: "body"
+      dest: "spec.arguments.parameters.0.value"
