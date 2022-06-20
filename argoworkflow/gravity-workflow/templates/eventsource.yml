@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: EventSource
+metadata:
+  name: {{ .Values.eventsource.name }}
+spec:
+  {{ .Values.eventsource.type }}:
+    {{ .Values.eventsource.eventName }}:
+      jsonBody: {{ .Values.eventsource.jsonBody }}
+      accessKey:
+        key: {{ .Values.eventsource.accessKey.key }}
+        name: {{ .Values.eventsource.accessKey.name }}
+      secretKey:
+        key: {{ .Values.eventsource.secretKey.key }}
+        name: {{ .Values.eventsource.secretKey.name }}
+      region: {{ .Values.eventsource.region }}
+      queue: {{ .Values.eventsource.queue }}
+      waitTimeSeconds: {{ .Values.eventsource.waitTimeSeconds }}
+      {{- if .Values.eventsource.roleARN }}
+      roleARN: {{ .Values.eventsource.roleARN }}
+      {{- end }}
+      {{- if .Values.eventsource.queueAccountId }}
+      queueAccountId: {{ .Values.eventsource.queueAccountId }}
+      {{- end }}
+      {{- if .Values.eventsource.DLQ }}
+      DLQ: {{ .Values.eventsource.DLQ }}
+      {{- end }}
+      {{- if .Values.eventsource.Endpoint }}
+      Endpoint: {{ .Values.eventsource.Endpoint }}
+      {{- end }}

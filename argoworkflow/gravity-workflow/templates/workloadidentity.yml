@@ -1,0 +1,59 @@
+{{- $fullname := include "gravity-workflow.fullname" . }}
+
+{{- if .Values.workloadIdentity.create }}
+---
+apiVersion: identity-manager.io/v1alpha1
+kind: WorkloadIdentity
+metadata:
+  name: {{ $fullname }}
+  labels:
+    {{- include "gravity-workflow.labels" $ | nindent 4 }}
+spec:
+  aws:
+    assumeRolePolicy: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Principal": {
+              "Federated": "arn:aws:iam::{{ .Values.workloadIdentity.aws.accountId }}:oidc-provider/{{ .Values.workloadIdentity.aws.oidcProvider }}"
+            },
+            "Action": "sts:AssumeRoleWithWebIdentity",
+            "Condition": {
+              "StringEquals": {
+                "{{ .Values.workloadIdentity.aws.oidcProvider }}:sub":"system:serviceaccount:{{ .Release.Namespace }}:{{ $fullname }}"
+              }
+            }
+          }
+        ]
+      }
+    inlinePolicies:
+      sqs-read-0: |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "sqs:ReceiveMessage"
+              ],
+              "Resource": [
+                "*"
+              ]
+            }
+          ]
+        }
+    maxSessionDuration: 3600
+    path: "/"
+    pods:
+      - matchLabels:
+          {{- include "gravity-workflow.selectorLabels" . | nindent 10 }}
+    serviceAccounts:
+      - action: Update
+        name: {{ $fullname }}
+        namespace: {{ .Release.Namespace }}
+  description: 'identity for argo app: {{ $fullname }}'
+  name: {{ $fullname }}
+  provider: AWS
+{{- end }}

@@ -1,0 +1,34 @@
+{{- if .Values.sensors}}
+{{- range $index, $sensor := .Values.sensors }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: {{ $sensor.name }}
+spec:
+  template:
+    serviceAccountName: {{ $sensor.template.serviceAccountName }}
+  dependencies:
+    - name: {{ $sensor.dependencies.name }}
+      eventSourceName: {{ $sensor.dependencies.eventSourceName }}
+      eventName: {{ $sensor.dependencies.eventName }}
+  triggers:
+    - template:
+        name: {{ $sensor.triggers.template.name }}
+        {{ $sensor.triggers.template.type }}:
+          operation: {{ $sensor.argoWorkFlow.operation }} #submit
+          source:
+            {{ $sensor.argoWorkFlow.source }}: #configmap
+              {{- if eq $sensor.argoWorkFlow.source "configmap" }}
+              name: {{ $sensor.argoWorkFlow.configmap.name }}
+              key:  {{ $sensor.argoWorkFlow.configmap.key }}
+              {{- end }}
+          {{- if $sensor.argoWorkFlow.parameters }}
+          parameters:
+            - src:
+                dependencyName: {{ $sensor.argoWorkFlow.parameters.src.dependencyName }}
+                dataKey:  {{ $sensor.argoWorkFlow.parameters.src.dataKey }}
+              dest: {{ $sensor.argoWorkFlow.parameters.dest }}
+          {{- end }}
+{{- end }}
+{{- end }}
