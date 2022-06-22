@@ -1,82 +1,38 @@
 eventsource:
-  name: "eventsource-sqs"
-  namespace: "gravity-system"
-  type: "sqs"
-  eventName: "example"
-  jsonBody: true
-  accessKey:
-    key: "accesskey"
-    name: "aws-secret-dev"
-  secretKey:
-    key: "secretkey"
-    name: "aws-secret-dev"
-  region: "us-east-1"
-  queue: "argo-event-source-demo"
-  waitTimeSeconds: 20
-
-sensors:
-  - name: "sensor-sqs-1"
-    namespace: "gravity-system"
-    template:
-      serviceAccountName: "operate-workflow-sa"
-    dependencies:
-      name: "test-dep"
-      eventSourceName: "eventsource-sqs"
-      eventName: "example"
-    triggers:
-      template:
-        name: "sqs-workflow"
-        type: "argoWorkflow"
-        # operation: "submit"
-        # source: "configmap"
-    argoWorkFlow:
-      operation: "submit"
-      source: "configmap"
-      configmap:
-        name: wf-template-k8s
-        key: temp1
-      parameters:
-        src:
-          dependencyName: "test-dep"
-          dataKey: "body"
-        dest: "spec.arguments.parameters.0.value"
-  - name: "sensor-sqs-2"
-    namespace: "gravity-system"
-    template:
-      serviceAccountName: "operate-workflow-sa"
-    dependencies:
-      name: "test-dep"
-      eventSourceName: "eventsource-sqs"
-      eventName: "example"
-    triggers:
-      template:
-        name: "sqs-workflow"
-        type: "argoWorkflow"
-        # operation: "submit"
-        # source: "configmap"
-    argoWorkFlow:
-      operation: "submit"
-      source: "configmap"
-      configmap:
-        name: wf-template-k8s
-        key: temp1
-      parameters:
-        src:
-          dependencyName: "test-dep"
-          dataKey: "body"
-        dest: "spec.arguments.parameters.0.value"
-
-workloadIdentity:
-  create: true
-  aws:
-    accountId: 554248189203
-    oidcProvider: oidc.eks.us-east-1.amazonaws.com/id/4EDBDB78CF81F4F9D1CD8B9962E221B1
-
+  type: 
+  eventName: 
+  jsonBody: 
+  name: 
+  queue: 
+  region: 
+  waitTimeSeconds: 
+sensors: {}
+# - argoWorkFlow:
+#     configmap:
+#       key: 
+#       name: 
+#     operation: 
+#     parameters:
+#       dest: 
+#       src:
+#         dataKey:
+#         dependencyName:
+#     source: 
+#   dependencies:
+#     eventName: 
+#     eventSourceName: 
+#     name: 
+#   name: 
+#   template:
+#     serviceAccountName: 
+#   triggers:
+#     template:
+#       name: 
+#       type:
 serviceAccount:
-  # Specifies whether a service account should be created
-  create: true
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  # name: "eventsource-sqs"
+  create: 
+workloadIdentity:
+  aws:
+    accountId: 
+    oidcProvider: 
+  create:
