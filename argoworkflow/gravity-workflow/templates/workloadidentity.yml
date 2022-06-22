@@ -22,7 +22,7 @@ spec:
             "Action": "sts:AssumeRoleWithWebIdentity",
             "Condition": {
               "StringEquals": {
-                "{{ .Values.workloadIdentity.aws.oidcProvider }}:sub":"system:serviceaccount:{{ .Release.Namespace }}:{{ $fullname }}"
+                "{{ .Values.workloadIdentity.aws.oidcProvider }}:sub":"system:serviceaccount:{{ .Release.Namespace }}:{{ .Values.workloadIdentity.serviceAccountName }}"
               }
             }
           }
@@ -36,7 +36,7 @@ spec:
             {
               "Effect": "Allow",
               "Action": [
-                "sqs:ReceiveMessage"
+                "sqs:*"
               ],
               "Resource": [
                 "*"
@@ -51,7 +51,7 @@ spec:
           {{- include "gravity-workflow.selectorLabels" . | nindent 10 }}
     serviceAccounts:
       - action: Update
-        name: {{ $fullname }}
+        name: {{ .Values.workloadIdentity.serviceAccountName }}
         namespace: {{ .Release.Namespace }}
   description: 'identity for argo app: {{ $fullname }}'
   name: {{ $fullname }}

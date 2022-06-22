@@ -6,33 +6,36 @@ eventsource:
   queue: 
   region: 
   waitTimeSeconds: 
-sensors: {}
-# - argoWorkFlow:
-#     configmap:
-#       key: 
-#       name: 
-#     operation: 
-#     parameters:
-#       dest: 
-#       src:
-#         dataKey:
-#         dependencyName:
-#     source: 
-#   dependencies:
-#     eventName: 
-#     eventSourceName: 
-#     name: 
-#   name: 
-#   template:
-#     serviceAccountName: 
-#   triggers:
-#     template:
-#       name: 
-#       type:
+  template:
+    serviceAccountName: 
+sensors: 
+- argoWorkFlow:
+    configmap:
+      key: 
+      name: 
+    operation: 
+    parameters:
+      dest: 
+      src:
+        dataKey: 
+        dependencyName: 
+    source: 
+  dependencies:
+    eventName: 
+    eventSourceName: 
+    name: 
+  name: 
+  template:
+    serviceAccountName: 
+  triggers:
+    template:
+      name: 
+      type: 
 serviceAccount:
   create: 
 workloadIdentity:
+  create: 
+  serviceAccountName: 
   aws:
     accountId: 
     oidcProvider: 
-  create:
