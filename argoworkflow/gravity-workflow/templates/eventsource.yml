@@ -6,12 +6,16 @@ spec:
   {{ .Values.eventsource.type }}:
     {{ .Values.eventsource.eventName }}:
       jsonBody: {{ .Values.eventsource.jsonBody }}
+      {{- if .Values.eventsource.accessKey }}
       accessKey:
         key: {{ .Values.eventsource.accessKey.key }}
         name: {{ .Values.eventsource.accessKey.name }}
+      {{- end }}
+      {{- if .Values.eventsource.secretKey }}
       secretKey:
         key: {{ .Values.eventsource.secretKey.key }}
         name: {{ .Values.eventsource.secretKey.name }}
+      {{- end }}
       region: {{ .Values.eventsource.region }}
       queue: {{ .Values.eventsource.queue }}
       waitTimeSeconds: {{ .Values.eventsource.waitTimeSeconds }}
