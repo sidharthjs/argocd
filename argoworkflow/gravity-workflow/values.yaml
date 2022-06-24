@@ -1,36 +1,37 @@
 eventsource:
-  type: 
-  eventName: 
-  jsonBody: 
-  name: 
-  queue: 
-  region: 
-  waitTimeSeconds: 
+  type: sqs
+  eventName: example
+  jsonBody: true
+  name: sqs-es
+  queue: argo-event-source-demo
+  region: us-east-1
+  waitTimeSeconds: 20
 sensors: 
 - argoWorkFlow:
     configmap:
-      key: 
-      name: 
-    operation: 
+      key: template
+      name: workflow-whalesay
+    operation: submit
     parameters:
-      dest: 
+      dest: spec.arguments.parameters.0.value
       src:
-        dataKey: 
-        dependencyName: 
-    source: 
+        dataKey: body
+        dependencyName: test-dep
+    source: configmap
   dependencies:
-    eventName: 
-    eventSourceName: 
-    name: 
-  name: 
+    eventName: example
+    eventSourceName: sqs-es
+    name: test-dep
+  name: sensor-sqs
   triggers:
     template:
-      name: 
-      type: 
+      name: sqs-workflow
+      type: argoWorkflow
 serviceAccount:
-  create: 
+  create: true
 workloadIdentity:
-  create: 
+  create: true
   aws:
-    accountId: 
-    oidcProvider: 
+    accountId: "554248189203"
+    oidcProvider: oidc.eks.us-east-1.amazonaws.com/id/62548ADFE180A81DC1D790B2E2B5995C
+namespace: gravity-system
