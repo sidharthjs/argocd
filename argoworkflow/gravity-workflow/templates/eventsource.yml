@@ -1,3 +1,5 @@
+{{- $fullname := include "gravity-workflow.fullname" . }}
+
 apiVersion: argoproj.io/v1alpha1
 kind: EventSource
 metadata:
@@ -31,12 +33,8 @@ spec:
       {{- if .Values.eventsource.Endpoint }}
       Endpoint: {{ .Values.eventsource.Endpoint }}
       {{- end }}
-  {{- if .Values.eventsource.template }}
   template:
     metadata:
       labels:
       {{- include "gravity-workflow.labels" $ | nindent 8 }}
-    {{- if .Values.eventsource.template.serviceAccountName }}
-    serviceAccountName: {{ .Values.eventsource.template.serviceAccountName }}
-    {{- end }}
-  {{- end }}
+    serviceAccountName: {{ $fullname }}-eventsource

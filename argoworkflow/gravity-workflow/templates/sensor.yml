@@ -1,3 +1,5 @@
+{{- $fullname := include "gravity-workflow.fullname" . }}
+
 {{- if .Values.sensors}}
 {{- range $index, $sensor := .Values.sensors }}
 ---
@@ -7,7 +9,7 @@ metadata:
   name: {{ $sensor.name }}
 spec:
   template:
-    serviceAccountName: {{ $sensor.template.serviceAccountName }}
+    serviceAccountName: {{ $fullname }}-sensor
   dependencies:
     - name: {{ $sensor.dependencies.name }}
       eventSourceName: {{ $sensor.dependencies.eventSourceName }}

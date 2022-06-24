@@ -6,8 +6,6 @@ eventsource:
   queue: 
   region: 
   waitTimeSeconds: 
-  template:
-    serviceAccountName: 
 sensors: 
 - argoWorkFlow:
     configmap:
@@ -25,8 +23,6 @@ sensors:
     eventSourceName: 
     name: 
   name: 
-  template:
-    serviceAccountName: 
   triggers:
     template:
       name: 
@@ -35,7 +31,6 @@ serviceAccount:
   create: 
 workloadIdentity:
   create: 
-  serviceAccountName: 
   aws:
     accountId: 
     oidcProvider: 
