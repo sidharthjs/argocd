@@ -14,7 +14,7 @@ spec:
   dependencies:
     - name: {{ $sensor.dependencies.name }}
       eventSourceName: {{ $sensor.dependencies.eventSourceName }}
-      eventName: {{ $sensor.dependencies.eventName }}
+      eventName: {{ $fullname }}-{{ $sensor.dependencies.eventName }}
   triggers:
     - template:
         name: {{ $fullname }}-{{ $sensor.triggers.template.name }}
