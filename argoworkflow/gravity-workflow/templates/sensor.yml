@@ -17,7 +17,7 @@ spec:
       eventName: {{ $sensor.dependencies.eventName }}
   triggers:
     - template:
-        name: {{ $sensor.triggers.template.name }}
+        name: {{ $fullname }}-{{ $sensor.triggers.template.name }}
         {{ $sensor.triggers.template.type }}:
           operation: {{ $sensor.argoWorkFlow.operation }} #submit
           source:
