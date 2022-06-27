@@ -10,7 +10,7 @@ spec:
       {{- range $key, $val := .Values.eventsource.properties }}
       {{ $key }}: {{ $val }}
       {{- end }}
-      region: {{ .Values.eventsource.region }}
+      region: {{ .Values.aws.region }}
   template:
     metadata:
       labels:
