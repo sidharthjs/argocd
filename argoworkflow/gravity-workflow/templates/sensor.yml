@@ -6,14 +6,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Sensor
 metadata:
-  name: {{ $sensor.name }}
+  name: {{ $fullname }}-{{ $sensor.name }}
   namespace: {{ $namespace }}
 spec:
   template:
     serviceAccountName: {{ $fullname }}-sensor
   dependencies:
     - name: {{ $sensor.dependencies.name }}
-      eventSourceName: {{ $sensor.dependencies.eventSourceName }}
+      eventSourceName: {{ $fullname }}-{{ $sensor.dependencies.eventSourceName }}
       eventName: {{ $fullname }}-{{ $sensor.dependencies.eventName }}
   triggers:
     - template:
