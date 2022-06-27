@@ -1,41 +1,18 @@
-{{- $fullname := include "gravity-workflow.fullname" . }}
+{{- $appname := include "gravity-workflow.fullname" . }}
 
 apiVersion: argoproj.io/v1alpha1
 kind: EventSource
 metadata:
-  name: {{ $fullname }}-{{ .Values.eventsource.name }}
-  namespace: {{ .Values.namespace }}
+  name: {{ $appname }}
 spec:
-  {{ .Values.eventsource.type }}:
-    {{ $fullname }}-{{ .Values.eventsource.eventName }}:
-      jsonBody: {{ .Values.eventsource.jsonBody }}
-      {{- if .Values.eventsource.accessKey }}
-      accessKey:
-        key: {{ .Values.eventsource.accessKey.key }}
-        name: {{ .Values.eventsource.accessKey.name }}
-      {{- end }}
-      {{- if .Values.eventsource.secretKey }}
-      secretKey:
-        key: {{ .Values.eventsource.secretKey.key }}
-        name: {{ .Values.eventsource.secretKey.name }}
+  sqs:
+    default:
+      {{- range $key, $val := .Values.eventsource.properties }}
+      {{ $key }}: {{ $val }}
       {{- end }}
       region: {{ .Values.eventsource.region }}
-      queue: {{ .Values.eventsource.queue }}
-      waitTimeSeconds: {{ .Values.eventsource.waitTimeSeconds }}
-      {{- if .Values.eventsource.roleARN }}
-      roleARN: {{ .Values.eventsource.roleARN }}
-      {{- end }}
-      {{- if .Values.eventsource.queueAccountId }}
-      queueAccountId: {{ .Values.eventsource.queueAccountId }}
-      {{- end }}
-      {{- if .Values.eventsource.DLQ }}
-      DLQ: {{ .Values.eventsource.DLQ }}
-      {{- end }}
-      {{- if .Values.eventsource.Endpoint }}
-      Endpoint: {{ .Values.eventsource.Endpoint }}
-      {{- end }}
   template:
     metadata:
       labels:
       {{- include "gravity-workflow.labels" $ | nindent 8 }}
-    serviceAccountName: {{ $fullname }}-eventsource
+    serviceAccountName: {{ $appname }}-eventsource

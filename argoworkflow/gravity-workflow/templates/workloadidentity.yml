@@ -6,7 +6,6 @@ apiVersion: identity-manager.io/v1alpha1
 kind: WorkloadIdentity
 metadata:
   name: {{ $fullname }}
-  namespace: {{ .Values.namespace }}
   labels:
     {{- include "gravity-workflow.labels" $ | nindent 4 }}
 spec:
@@ -37,7 +36,9 @@ spec:
             {
               "Effect": "Allow",
               "Action": [
-                "sqs:*"
+                "sqs:GetQueueUrl",
+                "sqs:ReceiveMessage",
+                "sqs:DeleteMessage"
               ],
               "Resource": [
                 "*"

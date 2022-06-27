@@ -1,4 +1,4 @@
-{{- if .Values.sensors}}
+{{- if .Values.sensor}}
 {{- $fullname := include "gravity-workflow.fullname" . }}
 
 apiVersion: rbac.authorization.k8s.io/v1

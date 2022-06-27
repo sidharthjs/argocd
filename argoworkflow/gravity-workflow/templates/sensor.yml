@@ -1,37 +1,30 @@
 {{- $fullname := include "gravity-workflow.fullname" . }}
-{{- $namespace := .Values.namespace }}
-{{- if .Values.sensors}}
-{{- range $index, $sensor := .Values.sensors }}
+{{- if .Values.sensor}}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Sensor
 metadata:
-  name: {{ $fullname }}-{{ $sensor.name }}
-  namespace: {{ $namespace }}
+  name: {{ $fullname }}
 spec:
   template:
     serviceAccountName: {{ $fullname }}-sensor
   dependencies:
-    - name: {{ $sensor.dependencies.name }}
-      eventSourceName: {{ $fullname }}-{{ $sensor.dependencies.eventSourceName }}
-      eventName: {{ $fullname }}-{{ $sensor.dependencies.eventName }}
+    - name: default-dep
+      eventSourceName: {{ $fullname }}
+      eventName: default
   triggers:
     - template:
-        name: {{ $fullname }}-{{ $sensor.triggers.template.name }}
-        {{ $sensor.triggers.template.type }}:
-          operation: {{ $sensor.argoWorkFlow.operation }} #submit
+        name: {{ $fullname }}-trigger
+        argoWorkflow:
+          operation: submit
           source:
-            {{ $sensor.argoWorkFlow.source }}: #configmap
-              {{- if eq $sensor.argoWorkFlow.source "configmap" }}
-              name: {{ $sensor.argoWorkFlow.configmap.name }}
-              key:  {{ $sensor.argoWorkFlow.configmap.key }}
+            configmap:
+              {{- range $key, $val := .Values.sensor.configmap }}
+              {{ $key }}: {{ $val }}
               {{- end }}
-          {{- if $sensor.argoWorkFlow.parameters }}
           parameters:
             - src:
-                dependencyName: {{ $sensor.argoWorkFlow.parameters.src.dependencyName }}
-                dataKey:  {{ $sensor.argoWorkFlow.parameters.src.dataKey }}
-              dest: {{ $sensor.argoWorkFlow.parameters.dest }}
-          {{- end }}
-{{- end }}
+                dependencyName: default-dep
+                dataKey:  body
+              dest: spec.arguments.parameters.0.value
 {{- end }}
