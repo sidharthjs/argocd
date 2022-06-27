@@ -34,4 +34,4 @@ workloadIdentity:
   aws:
     accountId: "554248189203"
     oidcProvider: oidc.eks.us-east-1.amazonaws.com/id/62548ADFE180A81DC1D790B2E2B5995C
-namespace: test2
+namespace: gravity-system
