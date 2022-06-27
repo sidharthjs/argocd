@@ -34,10 +34,10 @@ workloadIdentity:
     oidcProvider: 
 namespace: gravity-system
 
-sensor:
-  configmap:
-    name: 
-    key: 
+sensor: {}
+  # configmap:
+  #   name: 
+  #   key: 
 
 aws:
   region: us-east-1
