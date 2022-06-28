@@ -1,10 +1,11 @@
 {{- $fullname := include "gravity-workflow.fullname" . }}
 {{- if .Values.sensor}}
+{{- range $i, $configmap := .Values.sensor.configmaps }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Sensor
 metadata:
-  name: {{ $fullname }}
+  name: {{ $fullname }}-{{ $i }}
 spec:
   template:
     serviceAccountName: {{ $fullname }}-sensor
@@ -19,7 +20,7 @@ spec:
           operation: submit
           source:
             configmap:
-              {{- range $key, $val := .Values.sensor.configmap }}
+              {{- range $key, $val := $configmap }}
               {{ $key }}: {{ $val }}
               {{- end }}
           parameters:
@@ -27,4 +28,5 @@ spec:
                 dependencyName: default-dep
                 dataKey:  body
               dest: spec.arguments.parameters.0.value
+{{- end }}
 {{- end }}
