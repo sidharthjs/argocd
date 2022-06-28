@@ -8,7 +8,11 @@ spec:
   sqs:
     default:
       {{- range $key, $val := .Values.eventsource.properties }}
+      {{- if eq $key "queue"}}
+      queue: {{ (split ":" $val)._5 }}
+      {{- else }}
       {{ $key }}: {{ $val }}
+      {{- end}}
       {{- end }}
       region: {{ .Values.aws.region }}
   template:
