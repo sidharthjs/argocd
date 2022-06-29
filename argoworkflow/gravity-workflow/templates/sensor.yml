@@ -18,7 +18,7 @@ spec:
         name: {{ $fullname }}-trigger
         argoWorkflow:
           operation: submit
-          args: ["--labels", "argocd.argoproj.io/instance={{ .Release.Name }}"]
+          args: ["--labels", "argocd.argoproj.io/instance={{ $fullname }}"]
           source:
             configmap:
               {{- range $key, $val := $configmap }}
