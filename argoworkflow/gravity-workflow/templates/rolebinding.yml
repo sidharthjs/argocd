@@ -1,10 +1,10 @@
 {{- if .Values.sensor}}
-{{- $fullname := include "gravity-workflow.fullname" . }}
+{{- $appname := include "gravity-workflow.name" . }}
 
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ $fullname }}-operate-workflow-role
+  name: {{ $appname }}-operate-workflow-role
   namespace: {{ .Values.namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -12,12 +12,12 @@ roleRef:
   name: operate-workflow-role
 subjects:
   - kind: ServiceAccount
-    name: {{ $fullname }}-sensor
+    name: {{ $appname }}-sensor
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ $fullname }}-workflow-role-binding
+  name: {{ $appname }}-workflow-role-binding
   namespace: {{ .Values.namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io

@@ -1,25 +1,24 @@
-{{- $fullname := include "gravity-workflow.fullname" . }}
-{{- $name := include "gravity-workflow.name" . }}
+{{- $appname := include "gravity-workflow.name" . }}
 {{- if .Values.sensor}}
 {{- range $i, $configmap := .Values.sensor.configmaps }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Sensor
 metadata:
-  name: {{ $fullname }}-{{ $i }}
+  name: {{ $appname }}-{{ $i }}
 spec:
   template:
-    serviceAccountName: {{ $fullname }}-sensor
+    serviceAccountName: {{ $appname }}-sensor
   dependencies:
     - name: default-dep
-      eventSourceName: {{ $fullname }}
+      eventSourceName: {{ $appname }}
       eventName: default
   triggers:
     - template:
-        name: {{ $fullname }}-trigger
+        name: {{ $appname }}-trigger
         argoWorkflow:
           operation: submit
-          args: ["--labels", "argocd.argoproj.io/instance={{ $name }}"]
+          args: ["--labels", "gravity.invisibl.io/instance={{ $appname }}"]
           source:
             configmap:
               {{- range $key, $val := $configmap }}

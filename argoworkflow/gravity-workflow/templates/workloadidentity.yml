@@ -1,11 +1,11 @@
-{{- $fullname := include "gravity-workflow.fullname" . }}
+{{- $appname := include "gravity-workflow.name" . }}
 
 {{- if .Values.workloadIdentity.create }}
 ---
 apiVersion: identity-manager.io/v1alpha1
 kind: WorkloadIdentity
 metadata:
-  name: {{ $fullname }}
+  name: {{ $appname }}
   labels:
     {{- include "gravity-workflow.labels" $ | nindent 4 }}
 spec:
@@ -22,7 +22,7 @@ spec:
             "Action": "sts:AssumeRoleWithWebIdentity",
             "Condition": {
               "StringEquals": {
-                "{{ .Values.workloadIdentity.aws.oidcProvider }}:sub":"system:serviceaccount:{{ .Release.Namespace }}:{{ $fullname }}-eventsource"
+                "{{ .Values.workloadIdentity.aws.oidcProvider }}:sub":"system:serviceaccount:{{ .Release.Namespace }}:{{ $appname }}-eventsource"
               }
             }
           }
@@ -53,9 +53,9 @@ spec:
           {{- include "gravity-workflow.selectorLabels" . | nindent 10 }}
     serviceAccounts:
       - action: Create
-        name: "{{ $fullname }}-eventsource"
+        name: "{{ $appname }}-eventsource"
         namespace: {{ .Release.Namespace }}
-  description: 'identity for argo app: {{ $fullname }}'
-  name: {{ $fullname }}
+  description: 'identity for eventsource in argoapp: {{ $appname }}'
+  name: {{ $appname }}
   provider: AWS
 {{- end }}

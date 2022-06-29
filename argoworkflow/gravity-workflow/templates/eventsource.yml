@@ -1,4 +1,4 @@
-{{- $appname := include "gravity-workflow.fullname" . }}
+{{- $appname := include "gravity-workflow.name" . }}
 
 apiVersion: argoproj.io/v1alpha1
 kind: EventSource
