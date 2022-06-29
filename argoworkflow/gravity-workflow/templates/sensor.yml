@@ -1,4 +1,5 @@
 {{- $fullname := include "gravity-workflow.fullname" . }}
+{{- $name := include "gravity-workflow.name" . }}
 {{- if .Values.sensor}}
 {{- range $i, $configmap := .Values.sensor.configmaps }}
 ---
@@ -18,7 +19,7 @@ spec:
         name: {{ $fullname }}-trigger
         argoWorkflow:
           operation: submit
-          args: ["--labels", "argocd.argoproj.io/instance={{ $fullname }}"]
+          args: ["--labels", "argocd.argoproj.io/instance={{ $name }}"]
           source:
             configmap:
               {{- range $key, $val := $configmap }}
