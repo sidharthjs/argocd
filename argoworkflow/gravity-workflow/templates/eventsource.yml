@@ -25,4 +25,4 @@ spec:
     metadata:
       labels:
       {{- include "gravity-workflow.labels" $ | nindent 8 }}
-    serviceAccountName: {{ $appname }}-eventsource
+    # serviceAccountName: {{ $appname }}-eventsource
