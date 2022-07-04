@@ -8,7 +8,7 @@ workloadIdentity:
   aws:
     accountId: ""
     oidcProvider: 
-namespace: gravity-system
+namespace: dev
 
 sensor: {}
   # configmaps:
