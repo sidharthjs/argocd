@@ -15,6 +15,12 @@ spec:
       {{- end}}
       {{- end }}
       region: {{ .Values.aws.region }}
+      accessKey:
+        key: accesskey
+        name: aws-secret-dev
+      secretKey:
+        key: secretkey
+        name: aws-secret-dev
   template:
     metadata:
       labels:
