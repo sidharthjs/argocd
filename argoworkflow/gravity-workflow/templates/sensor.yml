@@ -1,11 +1,11 @@
 {{- $appname := include "gravity-workflow.name" . }}
-{{- if .Values.sensor}}
-{{- range $i, $configmap := .Values.sensor.configmaps }}
+{{- if .Values.sensors}}
+{{- range $i, $sensor := .Values.sensors }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Sensor
 metadata:
-  name: {{ $appname }}-{{ $i }}
+  name: {{ $appname }}-{{ $sensor.name }}
 spec:
   template:
     serviceAccountName: {{ $appname }}-sensor
@@ -21,7 +21,7 @@ spec:
           args: ["--labels", "gravity.invisibl.io/instance={{ $appname }}"]
           source:
             configmap:
-              {{- range $key, $val := $configmap }}
+              {{- range $key, $val := $sensor.configmap }}
               {{ $key }}: {{ $val }}
               {{- end }}
           parameters:
