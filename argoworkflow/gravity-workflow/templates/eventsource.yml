@@ -5,7 +5,7 @@ kind: EventSource
 metadata:
   name: {{ $appname }}
 spec:
-  sqs:
+  {{ .Values.eventsource.type }}:
     default:
       {{- range $key, $val := .Values.eventsource.properties }}
       {{- if eq $key "queue"}}
@@ -14,13 +14,24 @@ spec:
       {{ $key }}: {{ $val }}
       {{- end}}
       {{- end }}
-      region: {{ .Values.aws.region }}
+      region: {{ .Values.aws.region }} # Add region in code
+      {{- if eq $.Values.eventsource.type "sqs" }}
+      # temporary block...
       accessKey:
         key: accesskey
         name: aws-secret-dev
       secretKey:
         key: secretkey
         name: aws-secret-dev
+      {{- end }}
+      {{- if eq $.Values.eventsource.type "eventhub"}}
+      sharedAccessKeyName:
+        name: {{ .Values.eventsource.secret.accessKeyNameSecret }} 
+        key: {{ .Values.eventsource.secret.accessKeyName }} 
+      sharedAccessKey:
+        name: {{ .Values.eventsource.secret.accessKeySecret }} 
+        key: {{ .Values.eventsource.secret.accessKey }} 
+      {{- end }}
   template:
     metadata:
       labels:
