@@ -1,21 +1,49 @@
-eventsource:
-  properties:
-    jsonBody:
-    queue: 
-    waitTimeSeconds: 
-workloadIdentity:
-  create: 
-  aws:
-    accountId: ""
-    oidcProvider: 
-namespace: gravity-system
+eventsource: {}
+workloadIdentity: {}
+sensors: {}
+azuresecret:
+  sharedAccessKey:
+    key: SharedAccessKey
+    name: eventhub-secret
+  sharedAccessKeyName:
+    key: SharedAccessKeyName
+    name: eventhub-secret
 
-sensor: {}
-  # configmaps:
-  #   - name: 
-  #     key: 
-  #   - name: 
-  #     key: 
+# eventsource:
+#   type: sqs
+#   properties:
+#     jsonBody: true
+#     queue: arn:aws:sqs:region:account_id:queue_name
+#     waitTimeSeconds: 20
+#     region: us-east-1
+# eventsource:
+#   properties:
+#     fqdn: argo-events-eventhub.servicebus.windows.net
+#     hubName: event-hub-test
+#   sharedAccessKey:
+#     key: SharedAccessKey
+#     name: eventhub-secret
+#   sharedAccessKeyName:
+#     key: SharedAccessKeyName
+#     name: eventhub-secret
+#   type: azureEventsHub
 
-aws:
-  region: us-east-1
+# workloadIdentity:
+#   create: false
+#   aws:
+#     accountId: ""
+#     oidcProvider: 
+# namespace: gravity-system
+
+# sensors: #{}
+#   - name: workflow-1
+#     configmap:
+#       name: cf-1
+#       key: template
+#   - name: workflow-2
+#     configmap:
+#       name: cf-2
+#       key: template
+
+# aws:
+#   region: us-east-1

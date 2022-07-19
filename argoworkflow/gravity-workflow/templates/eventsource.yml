@@ -5,7 +5,8 @@ kind: EventSource
 metadata:
   name: {{ $appname }}
 spec:
-  {{ .Values.eventsource.type }}:
+  {{- if eq $.Values.eventsource.type "sqs" }}
+  sqs:
     default:
       {{- range $key, $val := .Values.eventsource.properties }}
       {{- if eq $key "queue"}}
@@ -14,7 +15,6 @@ spec:
       {{ $key }}: {{ $val }}
       {{- end}}
       {{- end }}
-      {{- if eq $.Values.eventsource.type "sqs" }}
       # temporary block...
       accessKey:
         key: accesskey
@@ -22,15 +22,20 @@ spec:
       secretKey:
         key: secretkey
         name: aws-secret-dev
+  {{- end }}
+  {{- if eq $.Values.eventsource.type "azureEventsHub" }}
+  azureEventsHub:
+    default:
+      {{- range $key, $val := .Values.eventsource.properties }}
+      {{ $key }}: {{ $val }}
       {{- end }}
-      {{- if eq $.Values.eventsource.type "azureEventsHub"}}
       sharedAccessKeyName:
-        name: {{ .Values.eventsource.sharedAccessKeyName.name }} 
-        key: {{ .Values.eventsource.sharedAccessKeyName.key }} 
+        name: {{ .Values.azuresecret.sharedAccessKeyName.name }} 
+        key: {{ .Values.azuresecret.sharedAccessKeyName.key }} 
       sharedAccessKey:
-        name: {{ .Values.eventsource.sharedAccessKey.name }} 
-        key: {{ .Values.eventsource.sharedAccessKey.key }} 
-      {{- end }}
+        name: {{ .Values.azuresecret.sharedAccessKey.name }} 
+        key: {{ .Values.azuresecret.sharedAccessKey.key }} 
+  {{- end }}
   template:
     metadata:
       labels:
