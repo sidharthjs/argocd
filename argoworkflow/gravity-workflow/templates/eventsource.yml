@@ -36,6 +36,13 @@ spec:
         name: {{ .Values.azuresecret.sharedAccessKey.name }} 
         key: {{ .Values.azuresecret.sharedAccessKey.key }} 
   {{- end }}
+  {{- if eq $.Values.eventsource.type "calendar" }}
+  calendar:
+    default:
+      {{- range $key, $val := .Values.eventsource.properties }}
+      {{ $key }}: {{ $val }}
+      {{- end }}
+  {{- end }}
   template:
     metadata:
       labels:
