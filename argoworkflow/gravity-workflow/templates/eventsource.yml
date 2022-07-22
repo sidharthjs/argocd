@@ -44,6 +44,11 @@ spec:
       {{- end }}
   {{- end }}
   {{- if eq $.Values.eventsource.type "github" }}
+  service:
+    ports:
+      - name: default
+        port: 12000
+        targetPort: 12000
   github:
     default:
       repositories:
@@ -64,6 +69,9 @@ spec:
       apiToken:
         name: {{ .Values.githubsecret.apiToken.name }}
         key: {{ .Values.githubsecret.apiToken.key }}
+      insecure: true
+      active: true
+      contentType: json
   {{- end }}
   template:
     metadata:
