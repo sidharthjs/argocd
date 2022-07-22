@@ -43,6 +43,28 @@ spec:
       {{ $key }}: {{ $val }}
       {{- end }}
   {{- end }}
+  {{- if eq $.Values.eventsource.type "github" }}
+  github:
+    default:
+      repositories:
+        owner: {{ .Values.eventsource.github.owner }}
+        repositories:
+          {{- range $val := .Values.eventsource.github.repositories }}
+          - {{ $val }}
+          {{- end }}
+      webhook:
+        endpoint: /push
+        port: "12000"
+        method: POST
+        url: {{ .Values.eventsource.github.url }}
+      events:
+        {{- range $val := .Values.eventsource.github.events }}
+        - {{ $val | quote }}
+        {{- end }}
+      apiToken:
+        name: {{ .Values.githubsecret.apiToken.name }}
+        key: {{ .Values.githubsecret.apiToken.key }}
+  {{- end }}
   template:
     metadata:
       labels:
