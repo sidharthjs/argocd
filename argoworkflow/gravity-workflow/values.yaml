@@ -1,4 +1,4 @@
-eventsource: {}
+# eventsource: {}
 workloadIdentity: {}
 sensors: {}
 azuresecret:
@@ -8,6 +8,25 @@ azuresecret:
   sharedAccessKeyName:
     key: SharedAccessKeyName
     name: eventhub-secret
+
+# eventsource:
+#   type: calendar
+#   properties:
+#     schedule: "13 * * * *"
+#     userPayload: "foo"
+# eventsource:
+#   type: github
+#   github:
+#     owner: sidharthjs
+#     repositories:
+#     - "argo-events-test"
+#     url: https://85b8-2401-4900-1cc9-76be-23f2-c89b-365-381f.in.ngrok.io
+#     events:
+#     - "*"
+githubsecret:
+  apiToken:
+    name: github-access
+    key: token
 
 # eventsource:
 #   type: sqs
