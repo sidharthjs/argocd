@@ -85,6 +85,7 @@ spec:
       password:
         name: {{ .Values.redisSecret.name  }}
         key: {{ .Values.redisSecret.key  }}
+      namespace: {{ .Values.redisSecret.namespace  }}
   {{- end }}
   template:
     metadata:

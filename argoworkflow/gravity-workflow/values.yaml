@@ -37,6 +37,7 @@ azuresecret:
 redisSecret:
   name: redis-access
   key: password
+  namespace: gravity-system
 
 # eventsource:
 #   type: sqs
