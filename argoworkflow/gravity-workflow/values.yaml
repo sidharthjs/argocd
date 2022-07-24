@@ -23,10 +23,20 @@ azuresecret:
 #     url: https://85b8-2401-4900-1cc9-76be-23f2-c89b-365-381f.in.ngrok.io
 #     events:
 #     - "*"
-githubsecret:
-  apiToken:
-    name: github-access
-    key: token
+# githubsecret:
+#   apiToken:
+#     name: github-access
+#     key: token
+# eventsource:
+#   type: redis
+#   redis:
+#     hostAddress: 0.tcp.in.ngrok.io:18056
+#     db: 0
+#     channels:
+#     - redisNews
+redisSecret:
+  name: redis-access
+  key: password
 
 # eventsource:
 #   type: sqs
