@@ -82,6 +82,9 @@ spec:
       {{- range $val := .Values.eventsource.redis.channels }}
       - {{ $val }}
       {{- end }}
+      password:
+        name: {{ .Values.redisSecret.name  }}
+        key: {{ .Values.redisSecret.key  }}
   {{- end }}
   template:
     metadata:
