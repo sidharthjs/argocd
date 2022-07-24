@@ -73,6 +73,16 @@ spec:
       active: true
       contentType: json
   {{- end }}
+  {{- if eq $.Values.eventsource.type "redis" }}
+  redis:
+    default:
+      hostAddress: {{ .Values.eventsource.redis.hostAddress  }}
+      db: {{ .Values.eventsource.redis.db  }}
+      channels:
+      {{- range $val := .Values.eventsource.redis.channels }}
+      - {{ $val }}
+      {{- end }}
+  {{- end }}
   template:
     metadata:
       labels:
