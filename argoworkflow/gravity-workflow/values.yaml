@@ -8,7 +8,18 @@ azuresecret:
   sharedAccessKeyName:
     key: SharedAccessKeyName
     name: eventhub-secret
-
+kafka:
+  connectionBackoff:
+    duration: 10s
+    steps: 5
+    factor: 2
+    jitter: 0.2
+# eventsource:
+#   type: kafka
+#   properties:
+#     url: 0.tcp.in.ngrok.io:14704
+#     topic: quickstart-events
+#     partition: "0"
 # eventsource:
 #   type: calendar
 #   properties:

@@ -87,6 +87,19 @@ spec:
         key: {{ .Values.redisSecret.key  }}
       namespace: {{ .Values.redisSecret.namespace  }}
   {{- end }}
+  {{- if eq $.Values.eventsource.type "kafka" }}
+  kafka:
+    default:
+      {{- range $key, $val := .Values.eventsource.properties }}
+      {{ $key }}: {{ $val | quote }}
+      {{- end}}
+      {{- if .Values.kafka }}
+      connectionBackoff:
+        {{- range $key, $val := .Values.kafka.connectionBackoff }}
+        {{ $key }}: {{ $val }}
+        {{- end}}
+      {{- end}}
+  {{- end }}
   template:
     metadata:
       labels:
