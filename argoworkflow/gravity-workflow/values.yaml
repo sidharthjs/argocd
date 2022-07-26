@@ -15,6 +15,21 @@ kafka:
     factor: 2
     jitter: 0.2
 # eventsource:
+#   type: resource
+#   properties:
+#     namespace: gravity-system
+#     group: argoproj.io
+#     version: v1alpha1
+#     resource: workflows
+#   resource:
+#     serviceAccountName: operate-workflow-sa
+#     eventTypes:
+#       - ADD
+#     filter:
+#       afterStart: true
+#       labels:
+#         - "app:whalesay"
+# eventsource:
 #   type: kafka
 #   properties:
 #     url: 0.tcp.in.ngrok.io:14704

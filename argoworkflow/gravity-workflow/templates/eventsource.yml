@@ -100,8 +100,37 @@ spec:
         {{- end}}
       {{- end}}
   {{- end }}
+  {{- if eq $.Values.eventsource.type "resource" }}
+  resource:
+    default:
+      {{- range $key, $val := .Values.eventsource.properties }}
+      {{ $key }}: {{ $val }}
+      {{- end}}
+      {{- if .Values.eventsource.resource.eventTypes }}
+      eventTypes:
+        {{- range $val := .Values.eventsource.resource.eventTypes }}
+        - {{ $val }}
+        {{- end }}
+      {{- end}}
+      {{- if .Values.eventsource.resource.filter }}
+      filter:
+        {{- if .Values.eventsource.resource.filter.afterStart }}
+        afterStart: {{ .Values.eventsource.resource.filter.afterStart }}
+        {{- end}}
+        {{- if .Values.eventsource.resource.filter.afterStart }}
+        labels:
+          {{- range $val := .Values.eventsource.resource.filter.labels }}
+          - key: {{ (split ":" $val)._0 }}
+            value: {{ (split ":" $val)._1 }}
+          {{- end }}
+        {{- end}}
+      {{- end}}
+  {{- end }}
   template:
     metadata:
       labels:
       {{- include "gravity-workflow.labels" $ | nindent 8 }}
+    {{- if .Values.eventsource.resource }}
+    serviceAccountName: {{ .Values.eventsource.resource.serviceAccountName }}
+    {{- end }}
     # serviceAccountName: {{ $appname }}-eventsource
