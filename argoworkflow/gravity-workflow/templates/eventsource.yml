@@ -98,6 +98,8 @@ spec:
         {{- range $key, $val := .Values.kafka.connectionBackoff }}
         {{ $key }}: {{ $val }}
         {{- end}}
+      tls:
+        insecureSkipVerify: true
       {{- end}}
   {{- end }}
   {{- if eq $.Values.eventsource.type "resource" }}
