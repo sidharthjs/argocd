@@ -98,6 +98,8 @@ spec:
         {{- range $key, $val := .Values.kafka.connectionBackoff }}
         {{ $key }}: {{ $val }}
         {{- end}}
+      sasl:
+        {{- toYaml $.Values.kafka.sasl | nindent 8}}
       tls:
         insecureSkipVerify: true
       {{- end}}

@@ -14,6 +14,14 @@ kafka:
     steps: 5
     factor: 2
     jitter: 0.2
+  sasl:
+    mechanism: SCRAM-SHA-256
+    passwordSecret:
+      key: password
+      name: kafka-access
+    userSecret:
+      key: user
+      name: kafka-access
 # eventsource:
 #   type: resource
 #   properties:
@@ -32,8 +40,8 @@ kafka:
 # eventsource:
 #   type: kafka
 #   properties:
-#     url: 0.tcp.in.ngrok.io:14704
-#     topic: quickstart-events
+#     url: moped-01.srvs.cloudkafka.com:9094,moped-02.srvs.cloudkafka.com:9094,moped-03.srvs.cloudkafka.com:9094
+#     topic: ajf18st7-default
 #     partition: "0"
 # eventsource:
 #   type: calendar
