@@ -39,7 +39,7 @@ spec:
   {{- if eq $.Values.eventsource.type "calendar" }}
   calendar:
     default:
-      {{- range $key, $val := .Values.eventsource.properties }}
+      {{- range $key, $val := .Values.properties }}
       {{ $key }}: {{ $val }}
       {{- end }}
   {{- end }}
