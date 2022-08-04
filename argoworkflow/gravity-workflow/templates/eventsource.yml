@@ -5,7 +5,7 @@ kind: EventSource
 metadata:
   name: {{ $appname }}
 spec:
-  {{- if eq $.Values.eventsource.type "sqs" }}
+  {{- if eq $.Values.type "sqs" }}
   sqs:
     default:
       {{- range $key, $val := .Values.eventsource.properties }}
@@ -23,7 +23,7 @@ spec:
         key: secretkey
         name: aws-secret-dev
   {{- end }}
-  {{- if eq $.Values.eventsource.type "azureEventsHub" }}
+  {{- if eq $.Values.type "azureEventsHub" }}
   azureEventsHub:
     default:
       {{- range $key, $val := .Values.eventsource.properties }}
@@ -36,14 +36,14 @@ spec:
         name: {{ .Values.azuresecret.sharedAccessKey.name }} 
         key: {{ .Values.azuresecret.sharedAccessKey.key }} 
   {{- end }}
-  {{- if eq $.Values.eventsource.type "calendar" }}
+  {{- if eq $.Values.type "calendar" }}
   calendar:
     default:
       {{- range $key, $val := .Values.properties }}
       {{ $key }}: {{ $val }}
       {{- end }}
   {{- end }}
-  {{- if eq $.Values.eventsource.type "github" }}
+  {{- if eq $.Values.type "github" }}
   service:
     ports:
       - name: default
@@ -73,7 +73,7 @@ spec:
       active: true
       contentType: json
   {{- end }}
-  {{- if eq $.Values.eventsource.type "redis" }}
+  {{- if eq $.Values.type "redis" }}
   redis:
     default:
       hostAddress: {{ .Values.eventsource.redis.hostAddress  }}
@@ -87,7 +87,7 @@ spec:
         key: {{ .Values.redisSecret.key  }}
       namespace: {{ .Values.redisSecret.namespace  }}
   {{- end }}
-  {{- if eq $.Values.eventsource.type "kafka" }}
+  {{- if eq $.Values.type "kafka" }}
   kafka:
     default:
       {{- range $key, $val := .Values.eventsource.properties }}
@@ -104,7 +104,7 @@ spec:
         insecureSkipVerify: true
       {{- end}}
   {{- end }}
-  {{- if eq $.Values.eventsource.type "resource" }}
+  {{- if eq $.Values.type "resource" }}
   resource:
     default:
       {{- range $key, $val := .Values.eventsource.properties }}

@@ -111,3 +111,6 @@ redisSecret:
 
 # aws:
 #   region: us-east-1
+
+eventsource:
+  properties: {}
