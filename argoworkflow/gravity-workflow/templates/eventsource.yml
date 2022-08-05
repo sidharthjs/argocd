@@ -64,34 +64,29 @@ spec:
   {{- if eq $.Values.type "resource" }}
   resource:
     default:
-      {{- range $key, $val := .Values.eventsource.properties }}
-      {{ $key }}: {{ $val }}
-      {{- end}}
-      {{- if .Values.eventsource.resource.eventTypes }}
+      namespace: {{ .Values.properties.namespace }}
+      group: {{ .Values.properties.group }}
+      version: {{ .Values.properties.version }}
+      resource: {{ .Values.properties.resource }}
       eventTypes:
-        {{- range $val := .Values.eventsource.resource.eventTypes }}
+      {{- range $key, $val := .Values.properties.eventTypes }}
         - {{ $val }}
-        {{- end }}
-      {{- end}}
-      {{- if .Values.eventsource.resource.filter }}
+      {{- end }}
       filter:
-        {{- if .Values.eventsource.resource.filter.afterStart }}
-        afterStart: {{ .Values.eventsource.resource.filter.afterStart }}
-        {{- end}}
-        {{- if .Values.eventsource.resource.filter.afterStart }}
+        afterStart: {{ .Values.afterStart }}
+        {{- if .Values.properties.filter.labels }}
         labels:
-          {{- range $val := .Values.eventsource.resource.filter.labels }}
+          {{- range $val := .Values.properties.filter.labels}}
           - key: {{ (split ":" $val)._0 }}
             value: {{ (split ":" $val)._1 }}
           {{- end }}
         {{- end}}
-      {{- end}}
   {{- end }}
   template:
     metadata:
       labels:
       {{- include "gravity-workflow.labels" $ | nindent 8 }}
-    {{- if .Values.eventsource.resource }}
-    serviceAccountName: {{ .Values.eventsource.resource.serviceAccountName }}
+    {{- if eq $.Values.type "resource" }}
+    serviceAccountName: {{ .Values.properties.serviceAccountName }}
     {{- end }}
     # serviceAccountName: {{ $appname }}-eventsource
