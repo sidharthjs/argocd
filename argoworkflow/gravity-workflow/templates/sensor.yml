@@ -21,9 +21,8 @@ spec:
           args: ["--labels", "gravity.invisibl.io/instance={{ $appname }}"]
           source:
             configmap:
-              {{- range $key, $val := $workflow.configmap }}
-              {{ $key }}: {{ $val }}
-              {{- end }}
+              name: $workflow.configMapName
+              key: $workflow.configMapKey
           parameters:
             - src:
                 dependencyName: default-dep
