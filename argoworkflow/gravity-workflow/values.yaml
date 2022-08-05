@@ -97,7 +97,7 @@ redisSecret:
 #   aws:
 #     accountId: ""
 #     oidcProvider: 
-# namespace: gravity-system
+namespace: gravity-system
 
 # sensors: #{}
 #   - name: workflow-1
@@ -112,5 +112,5 @@ redisSecret:
 # aws:
 #   region: us-east-1
 
-eventsource:
-  properties: {}
+# eventsource:
+#   properties: {}
