@@ -15,13 +15,13 @@ spec:
       {{ $key }}: {{ $val }}
       {{- end}}
       {{- end }}
-      {{- if .Values.awsSecret }}
+      {{- if .Values.awsAccess }}
       accessKey:
-        key: {{ .Values.awsSecret.accessKey.key }}
-        name: {{ .Values.awsSecret.accessKey.name }}
+        key: {{ .Values.awsAccess.accessKey.key }}
+        name: {{ .Values.awsAccess.accessKey.name }}
       secretKey:
-        key: {{ .Values.awsSecret.secretKey.key }}
-        name: {{ .Values.awsSecret.secretKey.name }}
+        key: {{ .Values.awsAccess.secretKey.key }}
+        name: {{ .Values.awsAccess.secretKey.name }}
       {{- end }}
   {{- end }}
   {{- if eq .Values.type "azureEventsHub" }}
@@ -29,11 +29,11 @@ spec:
     default:
       {{- toYaml .Values.properties | nindent 6 }}
       sharedAccessKeyName:
-        name: {{ .Values.azureSecret.sharedAccessKeyName.name }} 
-        key: {{ .Values.azureSecret.sharedAccessKeyName.key }} 
+        name: {{ .Values.azureAccess.sharedAccessKeyName.name }} 
+        key: {{ .Values.azureAccess.sharedAccessKeyName.key }} 
       sharedAccessKey:
-        name: {{ .Values.azureSecret.sharedAccessKey.name }} 
-        key: {{ .Values.azureSecret.sharedAccessKey.key }} 
+        name: {{ .Values.azureAccess.sharedAccessKey.name }} 
+        key: {{ .Values.azureAccess.sharedAccessKey.key }} 
   {{- end }}
   {{- if eq .Values.type "calendar" }}
   calendar:
@@ -45,9 +45,9 @@ spec:
     default:
       {{- toYaml .Values.properties | nindent 6 }}
       password:
-        name: {{ .Values.redisSecret.name  }}
-        key: {{ .Values.redisSecret.key  }}
-      namespace: {{ .Values.redisSecret.namespace  }}
+        name: {{ .Values.redisAccess.name  }}
+        key: {{ .Values.redisAccess.key  }}
+      namespace: {{ .Values.redisAccess.namespace  }}
   {{- end }}
   {{- if eq .Values.type "kafka" }}
   kafka:

@@ -1,7 +1,7 @@
 identity:
   create: true
 
-azureSecret:
+azureAccess:
   sharedAccessKey:
     key: SharedAccessKey
     name: eventhub-secret
@@ -9,7 +9,7 @@ azureSecret:
     key: SharedAccessKeyName
     name: eventhub-secret
 
-awsSecret:
+awsAccess:
   accessKey:
     key: accesskey
     name: aws-secret-dev
@@ -17,7 +17,7 @@ awsSecret:
     key: secretkey
     name: aws-secret-dev
 
-redisSecret:
+redisAccess:
   name: redis-access
   key: password
   namespace: gravity-system
