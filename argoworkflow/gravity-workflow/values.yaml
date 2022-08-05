@@ -1,8 +1,5 @@
-sa:
-  namespace: gravity-system
-
 identity:
-  create: false
+  create: true
 
 azureSecret:
   sharedAccessKey:
@@ -39,3 +36,9 @@ kafka:
     userSecret:
       key: user
       name: kafka-access
+
+sensor:
+  clusterRoles:
+    - operate-workflow-role
+    - workflow-role
+  namespace: gravity-system
