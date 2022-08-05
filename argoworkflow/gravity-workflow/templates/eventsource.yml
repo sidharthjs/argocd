@@ -8,7 +8,7 @@ spec:
   {{- if eq $.Values.type "sqs" }}
   sqs:
     default:
-      {{- range $key, $val := .Values.eventsource.properties }}
+      {{- range $key, $val := .Values.properties }}
       {{- if eq $key "queue"}}
       queue: {{ (split ":" $val)._5 }}
       {{- else }}
@@ -39,45 +39,10 @@ spec:
     default:
       {{- toYaml .Values.properties | nindent 6 }}
   {{- end }}
-  {{- if eq $.Values.type "github" }}
-  service:
-    ports:
-      - name: default
-        port: 12000
-        targetPort: 12000
-  github:
-    default:
-      repositories:
-        owner: {{ .Values.eventsource.github.owner }}
-        repositories:
-          {{- range $val := .Values.eventsource.github.repositories }}
-          - {{ $val }}
-          {{- end }}
-      webhook:
-        endpoint: /push
-        port: "12000"
-        method: POST
-        url: {{ .Values.eventsource.github.url }}
-      events:
-        {{- range $val := .Values.eventsource.github.events }}
-        - {{ $val | quote }}
-        {{- end }}
-      apiToken:
-        name: {{ .Values.githubsecret.apiToken.name }}
-        key: {{ .Values.githubsecret.apiToken.key }}
-      insecure: true
-      active: true
-      contentType: json
-  {{- end }}
   {{- if eq $.Values.type "redis" }}
   redis:
     default:
-      hostAddress: {{ .Values.eventsource.redis.hostAddress  }}
-      db: {{ .Values.eventsource.redis.db  }}
-      channels:
-      {{- range $val := .Values.eventsource.redis.channels }}
-      - {{ $val }}
-      {{- end }}
+      {{- toYaml .Values.properties | nindent 6 }}
       password:
         name: {{ .Values.redisSecret.name  }}
         key: {{ .Values.redisSecret.key  }}
