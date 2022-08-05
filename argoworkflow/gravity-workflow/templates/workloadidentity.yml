@@ -9,6 +9,10 @@ metadata:
   labels:
     {{- include "gravity-workflow.labels" $ | nindent 4 }}
 spec:
+  description: "identity for workload: {{ $appname }} running in kube: {{ .Values.kube.name }}"	
+  name: {{ .Values.kube.name }}-{{ $appname }}	
+  provider: {{ .Values.infra.provider }}	
+  {{- if eq "AWS" .Values.infra.provider }}
   aws:
     assumeRolePolicy: |
       {
@@ -29,7 +33,8 @@ spec:
         ]
       }
     inlinePolicies:
-      sqs-read-0: |
+      {{- if eq "sqs" .Values.type }}
+      sqs-read: |
         {
           "Version": "2012-10-17",
           "Statement": [
@@ -41,11 +46,12 @@ spec:
                 "sqs:DeleteMessage"
               ],
               "Resource": [
-                "*"
+                "{{ .Values.properties.queue }}"
               ]
             }
           ]
         }
+      {{- end }}
     maxSessionDuration: 3600
     path: "/"
     pods:
@@ -55,7 +61,5 @@ spec:
       - action: Create
         name: "{{ $appname }}-eventsource"
         namespace: {{ .Release.Namespace }}
-  description: 'identity for eventsource in argoapp: {{ $appname }}'
-  name: {{ $appname }}
-  provider: AWS
+  {{- end }}
 {{- end }}
