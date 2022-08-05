@@ -22,7 +22,7 @@ spec:
             "Action": "sts:AssumeRoleWithWebIdentity",
             "Condition": {
               "StringEquals": {
-                "oidc.eks.{{ .Values.infra.region }}.amazonaws.com/id/{{ .Values.kube.oidc.id }}:sub": "system:serviceaccount:{{ .Release.Namespace }}:{{ $appname }}-eventsource"
+                "oidc.eks.{{ .Values.infra.region }}.amazonaws.com/id/{{ .Values.kube.oidc.id }}:sub":"system:serviceaccount:{{ .Release.Namespace }}:{{ $appname }}-eventsource"
               }
             }
           }
