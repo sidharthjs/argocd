@@ -39,9 +39,6 @@ spec:
   {{- if eq $.Values.type "calendar" }}
   calendar:
     default:
-      # {{- range $key, $val := .Values.properties }}
-      # {{ $key }}: {{ $val }}
-      # {{- end }}
       {{- toYaml .Values.properties | nindent 6 }}
   {{- end }}
   {{- if eq $.Values.type "github" }}
