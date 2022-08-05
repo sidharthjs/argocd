@@ -15,24 +15,25 @@ spec:
       {{ $key }}: {{ $val }}
       {{- end}}
       {{- end }}
-      # temporary block...
+      {{- if .Values.awsSecret }}
       accessKey:
-        key: accesskey
-        name: aws-secret-dev
+        key: {{ .Values.awsSecret.accessKey.key }}
+        name: {{ .Values.awsSecret.accessKey.name }}
       secretKey:
-        key: secretkey
-        name: aws-secret-dev
+        key: {{ .Values.awsSecret.secretKey.key }}
+        name: {{ .Values.awsSecret.secretKey.name }}
+      {{- end }}
   {{- end }}
   {{- if eq $.Values.type "azureEventsHub" }}
   azureEventsHub:
     default:
       {{- toYaml .Values.properties | nindent 6 }}
       sharedAccessKeyName:
-        name: {{ .Values.azuresecret.sharedAccessKeyName.name }} 
-        key: {{ .Values.azuresecret.sharedAccessKeyName.key }} 
+        name: {{ .Values.azureSecret.sharedAccessKeyName.name }} 
+        key: {{ .Values.azureSecret.sharedAccessKeyName.key }} 
       sharedAccessKey:
-        name: {{ .Values.azuresecret.sharedAccessKey.name }} 
-        key: {{ .Values.azuresecret.sharedAccessKey.key }} 
+        name: {{ .Values.azureSecret.sharedAccessKey.name }} 
+        key: {{ .Values.azureSecret.sharedAccessKey.key }} 
   {{- end }}
   {{- if eq $.Values.type "calendar" }}
   calendar:
@@ -89,4 +90,3 @@ spec:
     {{- if eq $.Values.type "resource" }}
     serviceAccountName: {{ .Values.properties.serviceAccountName }}
     {{- end }}
-    # serviceAccountName: {{ $appname }}-eventsource

@@ -1,6 +1,6 @@
 {{- $appname := include "gravity-workflow.name" . }}
 
-{{- if .Values.workloadIdentity.create }}
+{{- if .Values.identity.create }}
 ---
 apiVersion: identity-manager.io/v1alpha1
 kind: WorkloadIdentity
@@ -17,12 +17,12 @@ spec:
           {
             "Effect": "Allow",
             "Principal": {
-              "Federated": "arn:aws:iam::{{ .Values.workloadIdentity.aws.accountId }}:oidc-provider/{{ .Values.workloadIdentity.aws.oidcProvider }}"
+              "Federated": "arn:aws:iam::{{ .Values.infra.id }}:oidc-provider/oidc.eks.{{ .Values.infra.region }}.amazonaws.com/id/{{ .Values.kube.oidc.id }}"
             },
             "Action": "sts:AssumeRoleWithWebIdentity",
             "Condition": {
               "StringEquals": {
-                "{{ .Values.workloadIdentity.aws.oidcProvider }}:sub":"system:serviceaccount:{{ .Release.Namespace }}:{{ $appname }}-eventsource"
+                "oidc.eks.{{ .Values.infra.region }}.amazonaws.com/id/{{ .Values.kube.oidc.id }}:sub": "system:serviceaccount:{{ .Release.Namespace }}:{{ $appname }}-eventsource"
               }
             }
           }

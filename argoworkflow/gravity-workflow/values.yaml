@@ -1,13 +1,30 @@
-# eventsource: {}
-workloadIdentity: {}
-sensors: {}
-azuresecret:
+sa:
+  namespace: gravity-system
+
+identity:
+  create: false
+
+azureSecret:
   sharedAccessKey:
     key: SharedAccessKey
     name: eventhub-secret
   sharedAccessKeyName:
     key: SharedAccessKeyName
     name: eventhub-secret
+
+awsSecret:
+  accessKey:
+    key: accesskey
+    name: aws-secret-dev
+  secretKey:
+    key: secretkey
+    name: aws-secret-dev
+
+redisSecret:
+  name: redis-access
+  key: password
+  namespace: gravity-system
+
 kafka:
   connectionBackoff:
     duration: 10s
@@ -22,95 +39,3 @@ kafka:
     userSecret:
       key: user
       name: kafka-access
-# eventsource:
-#   type: resource
-#   properties:
-#     namespace: gravity-system
-#     group: argoproj.io
-#     version: v1alpha1
-#     resource: workflows
-#   resource:
-#     serviceAccountName: operate-workflow-sa
-#     eventTypes:
-#       - ADD
-#     filter:
-#       afterStart: true
-#       labels:
-#         - "app:whalesay"
-# eventsource:
-#   type: kafka
-#   properties:
-#     url: moped-01.srvs.cloudkafka.com:9094,moped-02.srvs.cloudkafka.com:9094,moped-03.srvs.cloudkafka.com:9094
-#     topic: ajf18st7-default
-#     partition: "0"
-# eventsource:
-#   type: calendar
-#   properties:
-#     schedule: "13 * * * *"
-#     userPayload: "foo"
-# eventsource:
-#   type: github
-#   github:
-#     owner: sidharthjs
-#     repositories:
-#     - "argo-events-test"
-#     url: https://85b8-2401-4900-1cc9-76be-23f2-c89b-365-381f.in.ngrok.io
-#     events:
-#     - "*"
-# githubsecret:
-#   apiToken:
-#     name: github-access
-#     key: token
-# eventsource:
-#   type: redis
-#   redis:
-#     hostAddress: 0.tcp.in.ngrok.io:18056
-#     db: 0
-#     channels:
-#     - redisNews
-redisSecret:
-  name: redis-access
-  key: password
-  namespace: gravity-system
-
-# eventsource:
-#   type: sqs
-#   properties:
-#     jsonBody: true
-#     queue: arn:aws:sqs:region:account_id:queue_name
-#     waitTimeSeconds: 20
-#     region: us-east-1
-# eventsource:
-#   properties:
-#     fqdn: argo-events-eventhub.servicebus.windows.net
-#     hubName: event-hub-test
-#   sharedAccessKey:
-#     key: SharedAccessKey
-#     name: eventhub-secret
-#   sharedAccessKeyName:
-#     key: SharedAccessKeyName
-#     name: eventhub-secret
-#   type: azureEventsHub
-
-# workloadIdentity:
-#   create: false
-#   aws:
-#     accountId: ""
-#     oidcProvider: 
-namespace: gravity-system
-
-# sensors: #{}
-#   - name: workflow-1
-#     configmap:
-#       name: cf-1
-#       key: template
-#   - name: workflow-2
-#     configmap:
-#       name: cf-2
-#       key: template
-
-# aws:
-#   region: us-east-1
-
-eventsource:
-  properties: {}
