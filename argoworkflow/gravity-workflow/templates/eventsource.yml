@@ -86,14 +86,10 @@ spec:
   {{- if eq $.Values.type "kafka" }}
   kafka:
     default:
-      {{- range $key, $val := .Values.eventsource.properties }}
-      {{ $key }}: {{ $val | quote }}
-      {{- end}}
+      {{- toYaml .Values.properties | nindent 6 }}
       {{- if .Values.kafka }}
       connectionBackoff:
-        {{- range $key, $val := .Values.kafka.connectionBackoff }}
-        {{ $key }}: {{ $val }}
-        {{- end}}
+        {{- toYaml $.Values.kafka.connectionBackoff | nindent 8}}
       sasl:
         {{- toYaml $.Values.kafka.sasl | nindent 8}}
       tls:
