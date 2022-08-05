@@ -26,9 +26,7 @@ spec:
   {{- if eq $.Values.type "azureEventsHub" }}
   azureEventsHub:
     default:
-      {{- range $key, $val := .Values.eventsource.properties }}
-      {{ $key }}: {{ $val }}
-      {{- end }}
+      {{- toYaml .Values.properties | nindent 6 }}
       sharedAccessKeyName:
         name: {{ .Values.azuresecret.sharedAccessKeyName.name }} 
         key: {{ .Values.azuresecret.sharedAccessKeyName.key }} 
