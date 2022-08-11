@@ -8,7 +8,7 @@ metadata:
   name: {{ $appname }}
 spec:
   template:
-    serviceAccountName: {{ $appname }}
+    serviceAccountName: {{ $appname }}-sensor
   dependencies:
     - name: default
       eventSourceName: {{ $appname }}
