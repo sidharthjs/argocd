@@ -27,3 +27,10 @@ workflows: []
 sensor:
   clusterRoles:
     - argo-workflows-role
+
+kafka:
+  connectionBackoff:
+    duration: 10s
+    steps: 5
+    factor: 2
+    jitter: 0.2
