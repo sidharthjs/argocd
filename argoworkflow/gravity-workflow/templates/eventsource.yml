@@ -1,68 +1,52 @@
-{{- $appname := include "gravity-workflow.name" . }}
+{{- $appname := include "app.fullname" . }}
 
 apiVersion: argoproj.io/v1alpha1
 kind: EventSource
 metadata:
   name: {{ $appname }}
 spec:
-  {{- if eq .Values.type "sqs" }}
+  {{- if eq .Values.type "SQS" }}
   sqs:
     default:
-      {{- range $key, $val := .Values.properties }}
-      {{- if eq $key "queue"}}
-      queue: {{ (split ":" $val)._5 }}
-      {{- else }}
-      {{ $key }}: {{ $val }}
-      {{- end}}
-      {{- end }}
-      {{- if .Values.awsAccess }}
+      jsonBody: {{ .Values.properties.jsonBody }}
+      waitTillSeconds: {{ .Values.properties.waitTillSeconds }}
+      queue: {{ (split ":" .Values.properties.queue )._5 }}
+      {{- if eq .Values.infra.provider "Azure" }}
+      region: {{ .Values.properties.region }}
       accessKey:
-        key: {{ .Values.awsAccess.accessKey.key }}
-        name: {{ .Values.awsAccess.accessKey.name }}
+        key: {{ .Values.properties.accessKey.key }}
+        name: {{ .Values.properties.accessKey.name }}
       secretKey:
-        key: {{ .Values.awsAccess.secretKey.key }}
-        name: {{ .Values.awsAccess.secretKey.name }}
+        key: {{ .Values.properties.secretKey.key }}
+        name: {{ .Values.properties.secretKey.name }}
       {{- end }}
   {{- end }}
-  {{- if eq .Values.type "azureEventsHub" }}
+  {{- if eq .Values.type "AzureEventsHub" }}
   azureEventsHub:
     default:
       {{- toYaml .Values.properties | nindent 6 }}
-      sharedAccessKeyName:
-        name: {{ .Values.azureAccess.sharedAccessKeyName.name }} 
-        key: {{ .Values.azureAccess.sharedAccessKeyName.key }} 
-      sharedAccessKey:
-        name: {{ .Values.azureAccess.sharedAccessKey.name }} 
-        key: {{ .Values.azureAccess.sharedAccessKey.key }} 
   {{- end }}
-  {{- if eq .Values.type "calendar" }}
+  {{- if eq .Values.type "Calendar" }}
   calendar:
     default:
       {{- toYaml .Values.properties | nindent 6 }}
   {{- end }}
-  {{- if eq .Values.type "redis" }}
+  {{- if eq .Values.type "Redis" }}
   redis:
     default:
       {{- toYaml .Values.properties | nindent 6 }}
-      password:
-        name: {{ .Values.redisAccess.name  }}
-        key: {{ .Values.redisAccess.key  }}
-      namespace: {{ .Values.redisAccess.namespace  }}
   {{- end }}
-  {{- if eq .Values.type "kafka" }}
+  {{- if eq .Values.type "Kafka" }}
   kafka:
     default:
       {{- toYaml .Values.properties | nindent 6 }}
-      {{- if .Values.kafka }}
       connectionBackoff:
         {{- toYaml $.Values.kafka.connectionBackoff | nindent 8}}
       sasl:
         {{- toYaml $.Values.kafka.sasl | nindent 8}}
       tls:
-        insecureSkipVerify: true
-      {{- end}}
-  {{- end }}
-  {{- if eq .Values.type "resource" }}
+        insecureSkipVerify: true  {{- end }}
+  {{- if eq .Values.type "Resource" }}
   resource:
     default:
       namespace: {{ .Values.properties.namespace }}
@@ -86,7 +70,43 @@ spec:
   template:
     metadata:
       labels:
-      {{- include "gravity-workflow.labels" $ | nindent 8 }}
-    {{- if eq .Values.type "resource" }}
-    serviceAccountName: {{ .Values.properties.serviceAccountName }}
+      {{- include "app.labels" $ | nindent 8 }}
+    {{- if eq .Values.type "Resource" }}
+    serviceAccountName: {{ $appname }}-sa
     {{- end }}
+
+{{- if eq .Values.type "Resource" }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ $appname }}-role
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - {{ .Values.properties.resource }}
+    verbs:
+      - get
+      - watch
+      - list
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ $appname }}-role-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ $appname }}-role
+subjects:
+  - kind: ServiceAccount
+    name: {{ $appname }}-sa
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ $appname }}-sa
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+{{- end }}

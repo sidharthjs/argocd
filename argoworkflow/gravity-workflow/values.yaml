@@ -1,44 +1,29 @@
+
+# workflow id
+id: ""
+# workload instance (resource apply name)
+instance: "1"
+component: ""
+partOf: ""
+#managedBy: ""
+createdBy: ""
+project: ""
+
+# global
+infra: ~
+kube: ~
+
+# identity
 identity:
   create: true
 
-azureAccess:
-  sharedAccessKey:
-    key: SharedAccessKey
-    name: eventhub-secret
-  sharedAccessKeyName:
-    key: SharedAccessKeyName
-    name: eventhub-secret
+# eventsource
+type: ""
+properties: {}
 
-awsAccess:
-  accessKey:
-    key: accesskey
-    name: aws-secret-dev
-  secretKey:
-    key: secretkey
-    name: aws-secret-dev
-
-redisAccess:
-  name: redis-access
-  key: password
-  namespace: gravity-system
-
-kafka:
-  connectionBackoff:
-    duration: 10s
-    steps: 5
-    factor: 2
-    jitter: 0.2
-  sasl:
-    mechanism: SCRAM-SHA-256
-    passwordSecret:
-      key: password
-      name: kafka-access
-    userSecret:
-      key: user
-      name: kafka-access
+# workflows
+workflows: []
 
 sensor:
   clusterRoles:
-    - operate-workflow-role
-    - workflow-role
-  namespace: gravity-system
+    - argo-workflows-role

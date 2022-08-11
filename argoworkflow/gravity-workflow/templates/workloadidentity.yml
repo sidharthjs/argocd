@@ -1,4 +1,4 @@
-{{- $appname := include "gravity-workflow.name" . }}
+{{- $appname := include "app.fullname" . }}
 
 {{- if .Values.identity.create }}
 ---
@@ -7,10 +7,10 @@ kind: WorkloadIdentity
 metadata:
   name: {{ $appname }}
   labels:
-    {{- include "gravity-workflow.labels" $ | nindent 4 }}
+    {{- include "app.labels" $ | nindent 4 }}
 spec:
   description: "identity for workload: {{ $appname }} running in kube: {{ .Values.kube.name }}"	
-  name: {{ .Values.kube.name }}-{{ $appname }}	
+  name: {{ .Values.kube.name }}-{{ $appname }}
   provider: {{ .Values.infra.provider }}	
   {{- if eq "AWS" .Values.infra.provider }}
   aws:
@@ -26,7 +26,7 @@ spec:
             "Action": "sts:AssumeRoleWithWebIdentity",
             "Condition": {
               "StringEquals": {
-                "oidc.eks.{{ .Values.infra.region }}.amazonaws.com/id/{{ .Values.kube.oidc.id }}:sub":"system:serviceaccount:{{ .Release.Namespace }}:{{ $appname }}-eventsource"
+                "oidc.eks.{{ .Values.infra.region }}.amazonaws.com/id/{{ .Values.kube.oidc.id }}:sub": "system:serviceaccount:{{ .Release.Namespace }}:{{ $appname }}-eventsource"
               }
             }
           }
