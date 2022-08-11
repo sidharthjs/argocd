@@ -42,10 +42,9 @@ spec:
       {{- toYaml .Values.properties | nindent 6 }}
       connectionBackoff:
         {{- toYaml $.Values.kafka.connectionBackoff | nindent 8}}
-      sasl:
-        {{- toYaml $.Values.kafka.sasl | nindent 8}}
       tls:
-        insecureSkipVerify: true  {{- end }}
+        insecureSkipVerify: true  
+  {{- end }}
   {{- if eq .Values.type "Resource" }}
   resource:
     default:
