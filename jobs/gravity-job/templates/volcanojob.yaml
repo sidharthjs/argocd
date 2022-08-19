@@ -1,0 +1,39 @@
+apiVersion: batch.volcano.sh/v1alpha1
+kind: Job
+metadata:
+  generateName: step-job-1-
+  name: {{ .Values.volcano.name }}
+spec:
+  schedulerName: volcano
+  policies:
+  - event: PodEvicted
+    action: RestartJob
+  plugins:
+    ssh: []
+    env: []
+    svc: []
+  {{- if .Values.volcano.maxRetry }}
+  maxRetry: {{ .Values.volcano.maxRetry  }}
+  {{- end }}
+  queue: {{ .Values.volcano.queue }}
+  tasks:
+  {{- range $task := .Values.volcano.tasks }}
+  - name: {{ $task.name }}
+    replicas: {{ $task.replicas }}
+    maxRetry: {{ $task.maxRetry }}
+    template:
+      metadata:
+        name: {{ $task.template.metadata.name }}
+      spec:
+        containers:
+        - image: {{ $task.image }}
+          imagePullPolicy: Always
+          command: {{ $task.command }}
+          args: {{ $task.args }}
+          name: {{ $task.containerName }}
+          resources:
+            requests:
+              cpu: {{ $task.cpu }}
+              memory: {{ $task.memory }}
+        restartPolicy: {{ $task.restartPolicy }}
+  {{- end }}
