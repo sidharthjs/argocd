@@ -22,8 +22,6 @@ spec:
     replicas: {{ $task.replicas }}
     maxRetry: {{ $task.maxRetry }}
     template:
-      metadata:
-        name: {{ $task.template.metadata.name }}
       spec:
         containers:
         - image: {{ $task.image }}
@@ -40,7 +38,7 @@ spec:
           - {{ $a }}
           {{- end }}
           {{- end }}
-          name: {{ $task.containerName }}
+          name: {{ $task.name }}
           resources:
             requests:
               cpu: {{ $task.cpu }}
