@@ -43,5 +43,5 @@ spec:
             requests:
               cpu: {{ $task.cpu }}
               memory: {{ $task.memory }}
-        restartPolicy: {{ $task.restartPolicy }}
+        restartPolicy: OnFailure
   {{- end }}
