@@ -28,8 +28,18 @@ spec:
         containers:
         - image: {{ $task.image }}
           imagePullPolicy: Always
-          command: {{ $task.command }}
-          args: {{ $task.args }}
+          {{- if $task.command }}
+          command:
+          {{- range $c := $task.command }}
+          - {{ $c }}
+          {{- end }}
+          {{- end }}
+          {{- if $task.args }}
+          args:
+          {{- range $a := $task.args }}
+          - {{ $a }}
+          {{- end }}
+          {{- end }}
           name: {{ $task.containerName }}
           resources:
             requests:

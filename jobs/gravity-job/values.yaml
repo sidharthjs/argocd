@@ -81,24 +81,24 @@
 
 # affinity: {}
 
-volcano:
-  name: step-job-1
-  maxRetry: 1
-  queue: default
-  tasks:
-  - replicas: 2
-    maxRetry: 1
-    name: "task-1"
-    template:
-      metadata:
-        name: foo
-    image: alpine:latest
-    command: [sh, -c]
-    args: ["sleep 0 && exit 0"]
-    cpu: "100m"
-    memory: 16Mi
-    restartPolicy: OnFailure
-    containerName: foo
+# volcano:
+#   name: step-job-1
+#   maxRetry: 1
+#   queue: default
+#   tasks:
+#   - replicas: 2
+#     maxRetry: 1
+#     name: "task-1"
+#     template:
+#       metadata:
+#         name: foo
+#     image: alpine:latest
+#     command: [sh, -c]
+#     args: ["sleep 0 && exit 0"]
+#     cpu: "100m"
+#     memory: 16Mi
+#     restartPolicy: OnFailure
+#     containerName: foo
     #
       # spec:
       #   containers:
@@ -110,3 +110,31 @@ volcano:
       #         cpu: "100m"
       #         memory: 16Mi
       #   restartPolicy: OnFailure
+
+volcano: {}
+  # id: gravity-job-1
+  # instance: wrkflw-dev-gravity-job-1-211f372c
+  # kube:
+  #   engine: ""
+  #   name: ""
+  #   oidc:
+  #     id: ""
+  #   uint32: ""
+  #   version: ""
+  # maxRetry: 1
+  # name: gravity-job-1
+  # project: dev
+  # queue: default
+  # tasks:
+  # - args: [exit 0]
+  #   command: [sh, -c]
+  #   cpu: 100m
+  #   image: alpine:latest
+  #   maxRetry: 1
+  #   memory: 16Mi
+  #   name: task-1
+  #   replicas: 1
+  #   containerName: alpine-container-1
+  #   template:
+  #     metadata:
+  #       name: grvaity-meta-name
