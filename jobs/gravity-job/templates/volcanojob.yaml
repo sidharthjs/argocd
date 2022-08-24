@@ -2,7 +2,7 @@ apiVersion: batch.volcano.sh/v1alpha1
 kind: Job
 metadata:
   generateName: step-job-1-
-  name: {{ .Values.volcano.name }}
+  name: {{ .Values.name }}
 spec:
   schedulerName: volcano
   policies:
@@ -12,36 +12,29 @@ spec:
     ssh: []
     env: []
     svc: []
-  {{- if .Values.volcano.maxRetry }}
-  maxRetry: {{ .Values.volcano.maxRetry  }}
-  {{- end }}
-  queue: {{ .Values.volcano.queue }}
+#   {{- if .Values.volcano.maxRetry }}
+#   maxRetry: {{ .Values.volcano.maxRetry  }}
+#   {{- end }}
+  queue: default
   tasks:
-  {{- range $task := .Values.volcano.tasks }}
-  - name: {{ $task.name }}
-    replicas: {{ $task.replicas }}
-    maxRetry: {{ $task.maxRetry }}
+  {{- range $i, $container := .Values.containers }}
+  - name: "{{ $i }}"
+    replicas: {{ $container.containerReplica.desired }}
     template:
       spec:
         containers:
-        - image: {{ $task.image }}
+        - image: {{ $container.image.name }}:{{ $container.image.tag }}
           imagePullPolicy: Always
-          {{- if $task.command }}
+          {{- if $container.args }}
           command:
-          {{- range $c := $task.command }}
+          {{- range $c := $container.args }}
           - {{ $c }}
           {{- end }}
           {{- end }}
-          {{- if $task.args }}
-          args:
-          {{- range $a := $task.args }}
-          - {{ $a }}
-          {{- end }}
-          {{- end }}
-          name: {{ $task.name }}
+          name: "{{ $i }}"
           resources:
             requests:
-              cpu: {{ $task.cpu }}
-              memory: {{ $task.memory }}
+              cpu: {{ $container.resources.requests.cpu }}
+              memory: {{ $container.resources.requests.memory }}
         restartPolicy: OnFailure
   {{- end }}
