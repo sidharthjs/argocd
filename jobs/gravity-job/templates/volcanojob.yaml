@@ -1,3 +1,4 @@
+{{- if eq "Volcano" .Values.engine }}
 apiVersion: batch.volcano.sh/v1alpha1
 kind: Job
 metadata:
@@ -12,29 +13,26 @@ spec:
     ssh: []
     env: []
     svc: []
-#   {{- if .Values.volcano.maxRetry }}
-#   maxRetry: {{ .Values.volcano.maxRetry  }}
-#   {{- end }}
-  queue: default
+  queue: {{ .Values.task.options.queue.value }}
   tasks:
-  {{- range $i, $container := .Values.containers }}
-  - name: "{{ $i }}"
-    replicas: {{ $container.containerReplica.desired }}
+  - name: {{ .Values.name }}
+    replicas: {{ .Values.task.options.minAvailable.value }}
+    maxRetry: {{ .Values.task.options.maxRetry.value }}
     template:
       spec:
         containers:
-        - image: {{ $container.image.name }}:{{ $container.image.tag }}
+        - image: {{ .Values.task.image.name }}:{{ .Values.task.image.tag }}
           imagePullPolicy: Always
-          {{- if $container.args }}
+          {{- if .Values.task.args }}
           command:
-          {{- range $c := $container.args }}
-          - {{ $c }}
+          {{- range $a := .Values.task.args }}
+          - {{ $a }}
           {{- end }}
           {{- end }}
-          name: "{{ $i }}"
+          name: {{ .Values.name }}
           resources:
             requests:
-              cpu: {{ $container.resources.requests.cpu }}
-              memory: {{ $container.resources.requests.memory }}
+              cpu: {{ .Values.task.capacity.resources.requests.cpu }}
+              memory: {{ .Values.task.capacity.resources.requests.memory }}
         restartPolicy: OnFailure
-  {{- end }}
+{{- end }}
