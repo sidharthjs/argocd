@@ -2,8 +2,8 @@
 apiVersion: batch.volcano.sh/v1alpha1
 kind: Job
 metadata:
-  generateName: step-job-1-
-  name: {{ .Values.name }}
+  generateName: {{ .Values.name }}
+#   name: {{ .Values.name }}
 spec:
   schedulerName: volcano
   policies:
@@ -34,5 +34,12 @@ spec:
             requests:
               cpu: {{ .Values.task.capacity.resources.requests.cpu }}
               memory: {{ .Values.task.capacity.resources.requests.memory }}
+          {{- if .Values.task.env }}
+          env:
+          {{- range $name ,$val := .Values.task.env }}
+          - name: {{ $name }}
+            value: {{ $val }}
+          {{- end }}
+          {{- end }}
         restartPolicy: OnFailure
 {{- end }}
