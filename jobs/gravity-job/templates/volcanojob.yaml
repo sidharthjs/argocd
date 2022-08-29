@@ -40,5 +40,20 @@ spec:
             value: {{ $val }}
           {{- end }}
           {{- end }}
+          {{- if .Values.volumes }}
+          volumeMounts:
+          {{- range $i ,$vol := .Values.volumes }}
+          - name: {{ $vol.spec.ref.name }}-{{$i}}
+            mountPath: {{ $vol.spec.mountPath }}
+          {{- end }}
+          {{- end }}
         restartPolicy: OnFailure
+        {{- if .Values.volumes }}
+        volumes:
+        {{- range $i ,$vol := .Values.volumes }}
+        - persistentVolumeClaim: 
+            claimName: {{ $vol.spec.ref.name }}
+          name: {{ $vol.spec.ref.name }}-{{$i}}
+        {{- end }}
+        {{- end }}
 {{- end }}
