@@ -40,7 +40,27 @@ spec:
             value: {{ $val }}
           {{- end }}
           {{- end }}
+          {{- range $index, $entry := .Values.configs }}
+          env:
+          {{- range $ei, $env := $entry.spec.env }}
+          - name: {{ $env.name }}
+            valueFrom:
+              configMapKeyRef:
+                  name: {{ $entry.id }}
+                  key: {{ $env.key }}
+          {{- end }}
+          {{- end }}
           {{- if .Values.volumes }}
+          envFrom:
+          {{- range $index, $entry := .Values.configs }}
+          {{- range $index, $env := $entry.spec.envAll }}
+          - configMapRef:
+              name: {{ $entry.id }}
+            {{- with $env.prefix }}
+            prefix: {{ . }}
+            {{- end }}
+          {{- end }}
+          {{- end }}
           volumeMounts:
           {{- range $i ,$vol := .Values.volumes }}
           - name: {{ $vol.spec.ref.name }}-{{$i}}
