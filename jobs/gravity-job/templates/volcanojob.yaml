@@ -33,21 +33,25 @@ spec:
             requests:
               cpu: {{ .Values.task.capacity.resources.requests.cpu }}
               memory: {{ .Values.task.capacity.resources.requests.memory }}
-          {{- if .Values.task.env }}
+          # env    
           env:
-          {{- range $name ,$val := .Values.task.env }}
-          - name: {{ $name }}
-            value: {{ $val }}
-          {{- end }}
-          {{- end }}
           {{- range $index, $entry := .Values.configs }}
-          env:
           {{- range $ei, $env := $entry.spec.env }}
           - name: {{ $env.name }}
             valueFrom:
               configMapKeyRef:
                   name: {{ $entry.id }}
                   key: {{ $env.key }}
+          {{- end }}
+          {{- range $vi, $vol := $entry.spec.volumes }}
+          {{- if $vol.envName }}
+          - name: {{ $vol.envName }}
+            {{- if $vol.fileName }}
+            value: "{{ $vol.mountPath }}/{{ $vol.fileName }}"
+            {{- else }}
+            value: "{{ $vol.mountPath }}/{{ $entry.spec.ref.name }}-{{ $vi }}"
+            {{- end }}
+          {{- end }}
           {{- end }}
           {{- end }}
           {{- if .Values.volumes }}
