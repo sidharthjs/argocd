@@ -54,6 +54,22 @@ spec:
           {{- end }}
           {{- end }}
           {{- end }}
+          # secrets
+          {{- range $index, $entry := .Values.secrets }}
+          {{- range $ei, $env := $entry.spec.env }}
+          - name: {{ $env.name }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ $entry.id }}-env
+                key: {{ $env.key }}
+          {{- end }}
+          {{- range $vi, $vol := $entry.spec.volumes }}
+          {{- if $vol.envName }}
+          - name: {{ $vol.envName }}
+            value: "{{ $vol.mountPath }}/{{ $vol.fileName }}"
+          {{- end }}
+          {{- end }}
+          {{- end }}
           {{- if .Values.volumes }}
           envFrom:
           {{- range $index, $entry := .Values.configs }}
@@ -65,19 +81,46 @@ spec:
             {{- end }}
           {{- end }}
           {{- end }}
+          {{- end }}
           volumeMounts:
+          # configs
+          {{- range $index, $entry := .Values.configs }}
+          {{- range $vi, $vol := $entry.spec.volumes }}
+          - name: {{ $entry.spec.ref.name }}-{{ $vi }}
+            {{- if $vol.fileName }}
+            mountPath: {{ $vol.mountPath }}/{{ $vol.fileName }}
+            subPath: {{ $vol.fileName }}
+            {{- else }}
+            mountPath: {{ $vol.mountPath }}
+            {{- end }}
+            readOnly: true
+          {{- end }}
+          {{- end }}
           {{- range $i ,$vol := .Values.volumes }}
           - name: {{ $vol.spec.ref.name }}-{{$i}}
             mountPath: {{ $vol.spec.mountPath }}
           {{- end }}
           {{- end }}
         restartPolicy: OnFailure
-        {{- if .Values.volumes }}
         volumes:
+        #volumes
+        {{- if .Values.volumes }}
         {{- range $i ,$vol := .Values.volumes }}
         - persistentVolumeClaim: 
             claimName: {{ $vol.spec.ref.name }}
           name: {{ $vol.spec.ref.name }}-{{$i}}
         {{- end }}
         {{- end }}
-{{- end }}
+        # configs
+        {{- range $index, $entry := .Values.configs }}
+        {{- range $vi, $vol := $entry.spec.volumes }}
+        - name: {{ $entry.spec.ref.name }}-{{ $vi }}
+          configMap:
+            name: {{ $entry.id }}
+            {{- if $vol.fileName }}
+            items:
+              - key: content
+                path: {{ $vol.fileName }}
+            {{- end }}
+        {{- end }}
+        {{- end }}
