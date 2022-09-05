@@ -123,6 +123,19 @@ spec:
             mountPath: {{ $vol.spec.mountPath }}
           {{- end }}
           {{- end }}
+          # secrets - mount volumes for env also. csi works that way
+          {{- range $index, $entry := .Values.secrets }}
+          {{- range $vi, $vol := $entry.spec.volumes }}
+          - name: {{ $entry.spec.ref.name }}-vol
+            mountPath: {{ $vol.mountPath }}
+            readOnly: true
+          {{- end }}
+          {{- if or $entry.spec.envAll $entry.spec.env }}
+          - name: {{ $entry.spec.ref.name }}-env
+            mountPath: /__grty_secrets/{{ $index }}/{{ $entry.spec.ref.name }}
+            readOnly: true
+          {{- end }}
+          {{- end }}
         restartPolicy: OnFailure
         volumes:
         #volumes
@@ -144,5 +157,24 @@ spec:
               - key: content
                 path: {{ $vol.fileName }}
             {{- end }}
+        {{- end }}
+        {{- end }}
+        # secrets
+        {{- range $index, $entry := .Values.secrets }}
+        {{- if or $entry.spec.envAll $entry.spec.env}}
+        - name: {{ $entry.spec.ref.name }}-env
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: {{ $entry.id }}-env
+        {{- end }}
+        {{- if $entry.spec.volumes }}
+        - name: {{ $entry.spec.ref.name }}-vol
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: {{ $entry.id }}-vol
         {{- end }}
         {{- end }}
