@@ -35,6 +35,12 @@ spec:
               memory: {{ .Values.task.capacity.resources.requests.memory }}
           # env    
           env:
+          #env
+          {{- range $key, $val := .Values.task.env }}
+          - name: {{ $key }}
+            value: {{ $val }}
+          {{- end }}
+          #configs
           {{- range $index, $entry := .Values.configs }}
           {{- range $ei, $env := $entry.spec.env }}
           - name: {{ $env.name }}
@@ -71,7 +77,7 @@ spec:
           {{- end }}
           {{- end }}
           # connections (env & secrets)
-          {{- range $index, $conn := .Values.connections }}
+          {{- range $index, $conn := .Values.task.connections }}
           {{- range $ei, $env := $conn.env }}
           - name: {{ $env.name }}
             value: "{{ $env.value }}"
