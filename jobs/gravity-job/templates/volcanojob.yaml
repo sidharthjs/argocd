@@ -70,6 +70,22 @@ spec:
           {{- end }}
           {{- end }}
           {{- end }}
+          # connections (env & secrets)
+          {{- range $index, $conn := .Values.connections }}
+          {{- range $ei, $env := $conn.env }}
+          - name: {{ $env.name }}
+            value: "{{ $env.value }}"
+          {{- end }}
+          {{- if $conn.secrets }}
+          {{- range $sei, $env := $conn.secrets.env }}
+          - name: {{ $env.name }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ $conn.secrets.secretName }}
+                key: {{ $env.key }}
+          {{- end }}
+          {{- end }}
+          {{- end }}
           {{- if .Values.volumes }}
           envFrom:
           {{- range $index, $entry := .Values.configs }}

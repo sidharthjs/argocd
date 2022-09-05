@@ -1,0 +1,289 @@
+
+
+{{- $saName := include "gravity-job.serviceAccountName" . }}
+{{- $fullname := include "gravity-job.fullname" . }}
+
+{{- if and .Values.identity.create (or .Values.connections .Values.secrets) }}
+---
+apiVersion: identity-manager.io/v1alpha1
+kind: WorkloadIdentity
+metadata:
+  name: {{ $fullname }}
+  labels:
+    {{- include "gravity-job.labels" $ | nindent 4 }}
+spec:
+  # ${cluster_id}-${workload_id}
+  provider: {{ .Values.infra.provider }}
+  name: {{ .Values.kube.name }}-{{ $fullname }}
+  description: "identity for workload: {{ $fullname }} running in kube: {{ .Values.kube.name }}"
+  {{- if eq "Azure" .Values.infra.provider }}
+  azure:
+    roleAssignments:
+      {{- if .Values.secrets }}
+      vault-secrets-user:
+        role: Key Vault Secrets User
+      {{- end }}
+    identityBinding:
+      spec:
+        selector: {{ $fullname }}
+  {{- end }}
+  {{- if eq "AWS" .Values.infra.provider }}
+  aws:
+    path: "/"
+    maxSessionDuration: 3600
+    assumeRolePolicy: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Principal": {
+              "Federated": "arn:aws:iam::{{ .Values.infra.id }}:oidc-provider/oidc.eks.{{ .Values.infra.region }}.amazonaws.com/id/{{ .Values.kube.oidc.id }}"
+            },
+            "Action": "sts:AssumeRoleWithWebIdentity",
+            "Condition": {
+              "StringEquals": {
+                "oidc.eks.{{ .Values.infra.region }}.amazonaws.com/id/{{ .Values.kube.oidc.id }}:sub": "system:serviceaccount:{{ .Release.Namespace }}:{{ $saName }}"
+              }
+            }
+          }{{ if (eq "Keda" .Values.scaling.method) }},
+          {
+            "Effect": "Allow",
+            "Principal": {
+              "AWS": "arn:aws:iam::{{ .Values.infra.id }}:role/{{ .Values.kube.name }}-keda-operator"
+            },
+            "Action": "sts:AssumeRole"
+          }
+          {{- end }}
+        ]
+      }
+    inlinePolicies:
+      {{- if .Values.secrets }}
+      secrets: |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "secretsmanager:GetResourcePolicy",
+                "secretsmanager:GetSecretValue",
+                "secretsmanager:DescribeSecret",
+                "secretsmanager:ListSecretVersionIds"
+              ],
+              "Resource": [
+                {{- range $index, $secret := .Values.secrets }}
+                "arn:aws:secretsmanager:{{ $.Values.infra.region }}:{{ $.Values.infra.id }}:secret:{{ $secret.externalName }}*"{{- if ne (len $.Values.secrets) (add1 $index) }},{{- end }}
+                {{- end }}
+              ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": "secretsmanager:ListSecrets",
+              "Resource": "*"
+            }
+          ]
+        }
+      {{- end }}
+      {{- range $connID, $conn := .Values.connections }}
+      {{- if eq $conn.service "S3" }}
+      s3-write-{{ $connID }}: |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "s3:Put*"
+              ],
+              "Resource": [
+                "{{ $conn.properties.s3.arn }}",
+                "{{ $conn.properties.s3.arn }}/*"
+              ]
+            }
+          ]
+        }
+      s3-read-{{ $connID }}: |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "s3:Get*"
+              ],
+              "Resource": [
+                "{{ $conn.properties.s3.arn }}",
+                "{{ $conn.properties.s3.arn }}/*"
+              ]
+            }
+          ]
+        }
+      s3-delete-{{ $connID }}: |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "sqs:Delete*"
+              ],
+              "Resource": [
+                "{{ $conn.properties.s3.arn }}",
+                "{{ $conn.properties.s3.arn }}/*"
+              ]
+            }
+          ]
+        }
+      {{- end }}
+      {{- if eq $conn.service "SES" }}
+      ses-write-{{ $connID }}: |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "ses:SendEmail",
+                "ses:SendRawEmail"
+              ],
+              "Resource": [
+                "*"
+              ]
+            }
+          ]
+        }
+      {{- end }}
+      {{- if eq $conn.service "SQS" }}
+      sqs-write-{{ $connID }}: |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "sqs:SendMessage"
+              ],
+              "Resource": [
+                "{{ $conn.properties.sqs.arn }}"
+              ]
+            }
+          ]
+        }
+      sqs-read-{{ $connID }}: |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "sqs:ReceiveMessage"
+              ],
+              "Resource": [
+                "{{ $conn.properties.sqs.arn }}"
+              ]
+            }
+          ]
+        }
+      sqs-delete-{{ $connID }}: |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "sqs:DeleteMessage"
+              ],
+              "Resource": [
+                "{{ $conn.properties.sqs.arn }}"
+              ]
+            }
+          ]
+        }
+      {{- if (eq "Keda" $.Values.scaling.method) }}
+      sqs-keda-{{ $connID }}: |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "sqs:GetQueueAttributes"
+              ],
+              "Resource": [
+                "{{ $conn.properties.sqs.arn }}"
+              ]
+            }
+          ]
+        }
+      {{- end }}
+      {{- end }}
+      {{- if eq $conn.service "SNS" }}
+      sns-write-{{ $connID }}: |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "sns:Publish"
+              ],
+              "Resource": [
+                "{{ $conn.properties.sns.arn }}"
+              ]
+            }
+          ]
+        }
+      {{- end }}
+      {{- if eq $conn.service "KMS" }}
+      kms-read-{{ $connID }}: |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "kms:DescribeKey",
+                "kms:GenerateDataKey",
+                "kms:Decrypt"
+              ],
+              "Resource": [
+                "{{ $conn.properties.kms.arn }}"
+              ]
+            }
+          ]
+        }
+      {{- end }}
+      {{- if eq $conn.service "DynamoDB" }}
+      dynamodb-all-{{ $connID }}: |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "AccessDynamoDB",
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:Query"
+              ],
+              "Resource": [
+                "{{ default $conn.properties.dynamodb.arn $conn.properties.dynamodb.tableARN }}"
+              ]
+            }
+          ]
+        }
+      {{- end }}
+      {{- end }}
+    serviceAccounts:
+      - action: Update
+        name: {{ $saName }}
+        namespace: {{ .Release.Namespace }}
+    pods:
+      - matchLabels:
+          {{- include "gravity-job.selectorLabels" . | nindent 10 }}
+    {{- end }}
+{{- end }}
