@@ -111,7 +111,7 @@
       #         memory: 16Mi
       #   restartPolicy: OnFailure
 
-volcano: {}
+# volcano: {}
   # id: gravity-job-1
   # instance: wrkflw-dev-gravity-job-1-211f372c
   # kube:
@@ -138,3 +138,666 @@ volcano: {}
   #   template:
   #     metadata:
   #       name: grvaity-meta-name
+
+# ------------------------------------------------------------
+# id: gravity-job-1
+# instance: wrkflw-dev-gravity-job-1-26abdb63
+# kube:
+#   engine: ""
+#   name: ""
+#   oidc:
+#     id: ""
+#   uint32: ""
+#   version: ""
+# project: dev
+# volcano:
+#   maxRetry: 1
+#   name: gravity-job-1
+#   queue: default
+#   tasks:
+#   - args:
+#     - exit 0
+#     command:
+#     - sh
+#     - -c
+#     cpu: 100m
+#     image: alpine:latest
+#     maxRetry: 1
+#     memory: 16Mi
+#     name: task-1
+#     replicas: 1
+#     # restartPolicy: OnFailure
+
+# containers:
+# - args:
+#   - sh
+#   - -c
+#   - sleep 10 && exit 0
+#   containerReplica:
+#     desired: 2
+#     minimum: 2
+#   image:
+#     name: alpine
+#     tag: latest
+#   resources:
+#     requests:
+#       cpu: 100m
+#       memory: 16Mi
+# id: gravity-job-3-c42mg
+# infra:
+#   id: ""
+#   props: null
+#   provider: ""
+#   region: ""
+# instance: wrkflw-dev-gravity-job-3-c42mg-3bce04b5
+# kube:
+#   engine: ""
+#   name: ""
+#   oidc:
+#     id: ""
+#   uint32: ""
+#   version: ""
+# name: job-1
+# project: dev
+# volcano: {}
+
+# task:
+#   args:
+#   - sh
+#   - -c
+#   - sleep 10 && exit 0
+#   capacity:
+#     replica: 2
+#     resources:
+#       requests:
+#         cpu: 100m
+#         memory: 16Mi
+#   image:
+#     name: alpine
+#     tag: latest
+#   options:
+#     maxRetry:
+#       type: Integer
+#       value: "2"
+#     minAvailable:
+#       type: Integer
+#       value: "2"
+#     queue:
+#       type: String
+#       value: default
+#   env:
+#     foo: bar
+#   port: 8080
+# engine: Volcano
+# id: gravity-job-3-p679w
+# infra:
+#   id: ""
+#   props: null
+#   provider: ""
+#   region: ""
+# instance: wrkflw-dev-gravity-job-3-p679w-0d512851
+# kube:
+#   engine: ""
+#   name: ""
+#   oidc:
+#     id: ""
+#   uint32: ""
+#   version: ""
+# name: job-1
+# project: dev
+# volcano: {}
+
+# serviceAccount:
+#   create: false
+# identity:
+#   create: false
+# configs:
+# - id: volcano-job-1--volcano-configmap-kv-zbvmh
+#   spec:
+#     env:
+#     - key: foo_configmap
+#       name: foo_configmap
+#     ref:
+#       name: volcano-configmap-kv-zbvmh
+# - id: volcano-job-1--volcano-configmap-raw-45fpw
+#   spec:
+#     ref:
+#       name: volcano-configmap-raw-45fpw
+#     volumes:
+#     - envName: TESTPATH
+#       fileName: volcano-configmap-raw-45fpw
+#       mountPath: /config/configmap
+# engine: Volcano
+# id: gravity-job-3-zb2dx
+# infra:
+#   id: ""
+#   props: null
+#   provider: ""
+#   region: ""
+# instance: wrkflw-dev-gravity-job-3-zb2dx-adea5511
+# kube:
+#   engine: ""
+#   name: ""
+#   oidc:
+#     id: ""
+#   uint32: ""
+#   version: ""
+# kubeSecrets:
+# - id: volcano-job-1--volcano-secret-kv-zvtrt
+#   spec:
+#     envAll:
+#     - keys:
+#       - foo_secret_kv
+#       - baz_secret_kv
+#       prefix: ""
+#     ref:
+#       name: volcano-secret-kv-zvtrt
+# - id: volcano-job-1--volcano-secret-raw-lhm4x
+#   spec:
+#     ref:
+#       name: volcano-secret-raw-lhm4x
+#     volumes:
+#     - fileName: volcano-secret-raw-lhm4x
+#       mountPath: /config/secret
+# name: volcano-job-2
+# project: dev
+# secrets:
+# - externalName: gravityplatform-dev-volcano-vault-raw-xnj4gmi7sjcwt9ugxetm7f
+#   id: nginx-v1-volcano-vault-raw-9cdrw
+#   spec:
+#     ref:
+#       name: volcano-vault-raw-9cdrw
+#     volumes:
+#     - fileName: volcano-vault-raw-9cdrw
+#       mountPath: /config/vault
+#   storeID: gravity
+# task:
+#   args:
+#   - sh
+#   - -c
+#   - sleep 300 && exit 0
+#   capacity:
+#     replica: 2
+#     resources:
+#       requests:
+#         cpu: 100m
+#         memory: 16Mi
+#   configs:
+#   - env:
+#     - key: foo_configmap
+#       name: foo_configmap
+#     ref:
+#       name: volcano-configmap-kv-zbvmh
+#   - ref:
+#       name: volcano-configmap-raw-45fpw
+#     volumes:
+#     - envName: TESTPATH
+#       fileName: volcano-configmap-raw-45fpw
+#       mountPath: /config/configmap
+#   - envAll:
+#     - prefix: ""
+#     ref:
+#       name: volcano-secret-kv-zvtrt
+#   - ref:
+#       name: volcano-secret-raw-lhm4x
+#     volumes:
+#     - fileName: volcano-secret-raw-lhm4x
+#       mountPath: /config/secret
+#   - ref:
+#       name: volcano-vault-raw-9cdrw
+#     volumes:
+#     - fileName: volcano-vault-raw-9cdrw
+#       mountPath: /config/vault
+#   env:
+#     foo_additional: bar_additional
+#   image:
+#     name: alpine
+#     tag: latest
+#   options:
+#     maxRetry:
+#       type: Integer
+#       value: "1"
+#     minAvailable:
+#       type: Integer
+#       value: "1"
+#     queue:
+#       type: String
+#       value: default
+#   port: 8080
+# volcano: {}
+
+
+# engine: Volcano
+# configs:
+# - id: nginx-1-volcano-job-test-config-gtszv
+#   spec:
+#     env:
+#     - key: foo
+#       name: foo
+#     - key: bar
+#       name: bar
+#     envAll:
+#     - keys:
+#       - bar
+#       - foo
+#       prefix: ""
+#     ref:
+#       name: volcano-job-test-config-gtszv
+# connections:
+# - env:
+#   - name: azurequeue.id
+#     value: /subscriptions/766fbc6c-e228-4aa9-b878-93fa2f45245e/resourceGroups/gravity-platform/providers/Microsoft.Storage/storageAccounts/invisiblstorage/queueServices/default/queues/dev-queue-job-test-58d8e9dd
+#   - name: azurequeue.name
+#     value: dev-queue-job-test-58d8e9dd
+#   - name: azurequeue.storageAccount.name
+#     value: invisiblstorage
+#   name: queue-job-test
+#   properties:
+#     azurequeue:
+#       id: /subscriptions/766fbc6c-e228-4aa9-b878-93fa2f45245e/resourceGroups/gravity-platform/providers/Microsoft.Storage/storageAccounts/invisiblstorage/queueServices/default/queues/dev-queue-job-test-58d8e9dd
+#       name: dev-queue-job-test-58d8e9dd
+#       storageAccount:
+#         name: invisiblstorage
+#   secrets:
+#     env:
+#     - key: azurequeue.storageAccount.key
+#       name: azurequeue.storageAccount.key
+#     secretName: nginx-1-queue-job-test-58d8e9dd-secret
+#   service: AzureQueue
+# container:
+#   image:
+#     name: nginx
+#     tag: latest
+#   port: 80
+# id: nginx-z5rmk
+# infra:
+#   id: ""
+#   props:
+#     resourceGroup: gravity-platform
+#     subscriptionId: 766fbc6c-e228-4aa9-b878-93fa2f45245e
+#     tenantId: 6aaaf7bc-af1f-4b6f-8040-33e62afe567b
+#   provider: Azure
+#   region: eastus
+# instance: wrkld-dev-nginx-z5rmk-43b08b25
+# kube:
+#   engine: AKS
+#   name: dev-devaks-b98277ab
+#   oidc:
+#     id: ""
+#   uint32: "1560134030"
+#   version: 1.21.9
+# monit:
+#   enabled: false
+# name: nginx
+# nodeSelector:
+#   gravity.invisibl.io/nodepool: devaks-default-pq49g
+#   topology.kubernetes.io/zone: eastus-1
+# nodepool:
+#   arch: amd64
+#   capacityType: OnDemand
+#   name: devaks-default-pq49g
+# project: dev
+# scaling:
+#   desired: 1
+# version: "1"
+# volumes:
+# - spec:
+#     mountPath: /test/mnt
+#     ref:
+#       name: job-test-volume
+
+serviceAccount:
+  create: true
+identity:
+  create: true
+# configs:
+# - id: volcano-job-1--volcano-configmap-kv-2-th7xg
+#   spec:
+#     envAll:
+#     - keys:
+#       - PLAYER_LIVES
+#       - PLAYER_NAME
+#       prefix: PROP
+#     ref:
+#       name: volcano-configmap-kv-2-th7xg
+# - id: volcano-job-1--volcano-configmap-kv-zbvmh
+#   spec:
+#     env:
+#     - key: foo_configmap
+#       name: foo_configmap
+#     ref:
+#       name: volcano-configmap-kv-zbvmh
+# - id: volcano-job-1--volcano-configmap-raw-45fpw
+#   spec:
+#     ref:
+#       name: volcano-configmap-raw-45fpw
+#     volumes:
+#     - fileName: volcano-configmap-raw-45fpw
+#       mountPath: /config/configmap
+# engine: Volcano
+# id: gravity-job-3-zb2dx
+# infra:
+#   id: ""
+#   props: null
+#   provider: ""
+#   region: ""
+# instance: wrkflw-dev-gravity-job-3-zb2dx-adea5511
+# kube:
+#   engine: ""
+#   name: ""
+#   oidc:
+#     id: ""
+#   uint32: ""
+#   version: ""
+# name: volcano-job-2
+# project: dev
+# volumes:
+# - spec:
+#     mountPath: /test/mnt
+#     ref:
+#       name: job-test-volume
+# secrets:
+# - externalName: gravityplatform-dev-volcano-vault-raw-xnj4gmi7sjcwt9ugxetm7f
+#   id: nginx-v1-volcano-vault-raw-9cdrw
+#   spec:
+#     ref:
+#       name: volcano-vault-raw-9cdrw
+#     volumes:
+#     - fileName: volcano-vault-raw-9cdrw
+#       mountPath: /config/vault
+#   storeID: gravity
+# task:
+#   args:
+#   - sh
+#   - -c
+#   - sleep 300 && exit 0
+#   capacity:
+#     replica: 2
+#     resources:
+#       requests:
+#         cpu: 100m
+#         memory: 16Mi
+#   configs:
+#   - env:
+#     - key: foo_configmap
+#       name: foo_configmap
+#     ref:
+#       name: volcano-configmap-kv-zbvmh
+#   - ref:
+#       name: volcano-configmap-raw-45fpw
+#     volumes:
+#     - envName: TESTPATH
+#       fileName: volcano-configmap-raw-45fpw
+#       mountPath: /config/configmap
+#   - envAll:
+#     - prefix: ""
+#     ref:
+#       name: volcano-secret-kv-zvtrt
+#   - ref:
+#       name: volcano-secret-raw-lhm4x
+#     volumes:
+#     - fileName: volcano-secret-raw-lhm4x
+#       mountPath: /config/secret
+#   - ref:
+#       name: volcano-vault-raw-9cdrw
+#     volumes:
+#     - fileName: volcano-vault-raw-9cdrw
+#       mountPath: /config/vault
+#   env:
+#     foo_additional: bar_additional
+#   image:
+#     name: alpine
+#     tag: latest
+#   options:
+#     maxRetry:
+#       type: Integer
+#       value: "1"
+#     minAvailable:
+#       type: Integer
+#       value: "1"
+#     queue:
+#       type: String
+#       value: default
+#   port: 8080
+# volcano: {}
+
+
+
+#----------------------------------------------------------
+# connections
+# connections:
+# - env:
+#   - name: QUEUE_ID
+#     value: /subscriptions/766fbc6c-e228-4aa9-b878-93fa2f45245e/resourceGroups/gravity-platform/providers/Microsoft.Storage/storageAccounts/invisiblstorage/queueServices/default/queues/dev-queue-job-test-58d8e9dd
+#   - name: QUEUE_NAME
+#     value: dev-queue-job-test-58d8e9dd
+#   - name: QUEUE_SA_NAME
+#     value: invisiblstorage
+#   name: queue-job-test
+#   properties:
+#     azurequeue:
+#       id: /subscriptions/766fbc6c-e228-4aa9-b878-93fa2f45245e/resourceGroups/gravity-platform/providers/Microsoft.Storage/storageAccounts/invisiblstorage/queueServices/default/queues/dev-queue-job-test-58d8e9dd
+#       name: dev-queue-job-test-58d8e9dd
+#       storageAccount:
+#         name: invisiblstorage
+#   secrets:
+#     env:
+#     - key: azurequeue.storageAccount.key
+#       name: QUEUE_SA_KEY
+#     secretName: volcano-job-1--queue-job-test-58d8e9dd-secret
+#   service: AzureQueue
+# engine: Volcano
+# id: gravity-job-3-cwjcw
+# infra:
+#   id: ""
+#   props:
+#     resourceGroup: gravity-platform
+#     subscriptionId: 766fbc6c-e228-4aa9-b878-93fa2f45245e
+#     tenantId: 6aaaf7bc-af1f-4b6f-8040-33e62afe567b
+#   provider: Azure
+#   region: eastus
+# instance: wrkflw-dev-gravity-job-3-cwjcw-08d541d5
+# kube:
+#   engine: ""
+#   name: ""
+#   oidc:
+#     id: ""
+#   uint32: ""
+#   version: ""
+# name: volcano-job-1
+# project: dev
+# task:
+#   env:
+#     JOB_MODE: receive
+#     AZURE_QUEUE_MESSAGE: foo_msg
+#     # CLOUD_PROVIDER: azure
+#   args:
+#   - sh
+#   - -c
+#   - sleep 300 && exit 0
+#   capacity:
+#     replica: 1
+#     resources:
+#       requests:
+#         cpu: 100m
+#         memory: 16Mi
+#   connections:
+#   - env:
+#     - name: AZURE_QUEUE_ID
+#       value: /subscriptions/766fbc6c-e228-4aa9-b878-93fa2f45245e/resourceGroups/gravity-platform/providers/Microsoft.Storage/storageAccounts/invisiblstorage/queueServices/default/queues/dev-queue-job-test-58d8e9dd
+#     - name: AZURE_QUEUE_NAME
+#       value: dev-queue-job-test-58d8e9dd
+#     - name: AZURE_STORAGE_ACCOUNT_NAME
+#       value: invisiblstorage
+#     name: queue-job-test
+#     properties:
+#       azurequeue:
+#         id: /subscriptions/766fbc6c-e228-4aa9-b878-93fa2f45245e/resourceGroups/gravity-platform/providers/Microsoft.Storage/storageAccounts/invisiblstorage/queueServices/default/queues/dev-queue-job-test-58d8e9dd
+#         name: dev-queue-job-test-58d8e9dd
+#         storageAccount:
+#           name: invisiblstorage
+#     secrets:
+#       env:
+#       - key: azurequeue.storageAccount.key
+#         name: AZURE_STORAGE_ACCOUNT_KEY_FAKE
+#       secretName: volcano-job-1--queue-job-test-58d8e9dd-secret
+#     service: AzureQueue
+#   image:
+#     name: sidharthjs/az-queue-test
+#     tag: 1.0.0
+#   options:
+#     maxRetry:
+#       type: Integer
+#       value: "1"
+#     minAvailable:
+#       type: Integer
+#       value: "1"
+#     queue:
+#       type: String
+#       value: default
+#   port: 8080
+# volcano: {}
+
+# engine: Volcano
+# id: gravity-job-3-78n48
+# infra:
+#   id: ""
+#   props: {}
+#   provider: Azure
+#   region: eastus
+# instance: wrkflw-dev-gravity-job-3-78n48-88a4ead6
+# kube:
+#   engine: AKS
+#   name: dev-devaks-b98277ab
+#   oidc:
+#     id: ""
+#   uint32: "1560134030"
+#   version: 1.21.9
+# name: volcano-job-1
+# project: dev
+# task:
+#   args:
+#   - sh
+#   - -c
+#   - sleep 300 && exit 0
+#   capacity:
+#     replica: 1
+#     resources:
+#       requests:
+#         cpu: 100m
+#         memory: 16Mi
+#   connections:
+#   - env:
+#     - name: QUEUE_ID
+#       value: /subscriptions/766fbc6c-e228-4aa9-b878-93fa2f45245e/resourceGroups/gravity-platform/providers/Microsoft.Storage/storageAccounts/invisiblstorage/queueServices/default/queues/dev-queue-job-test-58d8e9dd
+#     - name: QUEUE_NAME
+#       value: dev-queue-job-test-58d8e9dd
+#     - name: QUEUE_SA_NAME
+#       value: invisiblstorage
+#     name: queue-job-test
+#     properties:
+#       azurequeue:
+#         id: /subscriptions/766fbc6c-e228-4aa9-b878-93fa2f45245e/resourceGroups/gravity-platform/providers/Microsoft.Storage/storageAccounts/invisiblstorage/queueServices/default/queues/dev-queue-job-test-58d8e9dd
+#         name: dev-queue-job-test-58d8e9dd
+#         storageAccount:
+#           name: invisiblstorage
+#     secrets:
+#       env:
+#       - key: azurequeue.storageAccount.key
+#         name: QUEUE_SA_KEY
+#       secretName: volcano-job-1--queue-job-test-58d8e9dd-secret
+#     service: AzureQueue
+#   image:
+#     name: alpine
+#     tag: latest
+#   options:
+#     maxRetry:
+#       type: Integer
+#       value: "1"
+#     minAvailable:
+#       type: Integer
+#       value: "1"
+#     queue:
+#       type: String
+#       value: default
+#   port: 8080
+# volcano: {}
+
+
+# connections:
+# - env:
+#   - name: QUEUE_ID
+#     value: /subscriptions/766fbc6c-e228-4aa9-b878-93fa2f45245e/resourceGroups/gravity-platform/providers/Microsoft.Storage/storageAccounts/invisiblstorage/queueServices/default/queues/dev-queue-job-test-58d8e9dd
+#   - name: QUEUE_NAME
+#     value: dev-queue-job-test-58d8e9dd
+#   - name: QUEUE_SA_NAME
+#     value: invisiblstorage
+#   name: queue-job-test
+#   properties:
+#     azurequeue:
+#       id: /subscriptions/766fbc6c-e228-4aa9-b878-93fa2f45245e/resourceGroups/gravity-platform/providers/Microsoft.Storage/storageAccounts/invisiblstorage/queueServices/default/queues/dev-queue-job-test-58d8e9dd
+#       name: dev-queue-job-test-58d8e9dd
+#       storageAccount:
+#         name: invisiblstorage
+#   secrets:
+#     env:
+#     - key: azurequeue.storageAccount.key
+#       name: QUEUE_SA_KEY
+#     secretName: volcano-job-1--queue-job-test-58d8e9dd-secret
+#   service: AzureQueue
+# engine: Volcano
+# id: gravity-job-3-sxn69
+# infra:
+#   id: ""
+#   props: {}
+#   provider: Azure
+#   region: eastus
+# instance: wrkflw-dev-gravity-job-3-sxn69-660bf665
+# kube:
+#   engine: AKS
+#   name: dev-devaks-b98277ab
+#   oidc:
+#     id: ""
+#   uint32: "1560134030"
+#   version: 1.21.9
+# name: volcano-job-1
+# project: dev
+# task:
+#   args:
+#   - sh
+#   - -c
+#   - sleep 300 && exit 0
+#   capacity:
+#     replica: 1
+#     resources:
+#       requests:
+#         cpu: 100m
+#         memory: 16Mi
+#   connections:
+#   - properties:
+#     - key: azurequeue.id
+#       name: QUEUE_ID
+#     - key: azurequeue.name
+#       name: QUEUE_NAME
+#     - key: azurequeue.storageAccount.name
+#       name: QUEUE_SA_NAME
+#     ref:
+#       name: queue-job-test
+#     secrets:
+#     - key: azurequeue.storageAccount.key
+#       name: QUEUE_SA_KEY
+#   image:
+#     name: alpine
+#     tag: latest
+#   options:
+#     maxRetry:
+#       type: Integer
+#       value: "1"
+#     minAvailable:
+#       type: Integer
+#       value: "1"
+#     queue:
+#       type: String
+#       value: default
+#   port: 8080
+# volcano: {}
