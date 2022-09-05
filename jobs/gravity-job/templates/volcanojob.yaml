@@ -77,7 +77,7 @@ spec:
           {{- end }}
           {{- end }}
           # connections (env & secrets)
-          {{- range $index, $conn := .Values.task.connections }}
+          {{- range $index, $conn := .Values.connections }}
           {{- range $ei, $env := $conn.env }}
           - name: {{ $env.name }}
             value: "{{ $env.value }}"
