@@ -20,6 +20,9 @@ spec:
     template:
       metadata:
         labels:
+          {{- if eq "Azure" .Values.infra.provider }}
+          aadpodidbinding: {{ include "gravity-job.fullname" . }}
+          {{- end }}
           {{- include "gravity-job.labels" . | nindent 10 }}
       spec:
         containers:
