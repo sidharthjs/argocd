@@ -18,6 +18,9 @@ spec:
     replicas: {{ .Values.task.options.minAvailable.value }}
     maxRetry: {{ .Values.task.options.maxRetry.value }}
     template:
+      metadata:
+        labels:
+          {{- include "gravity-job.labels" . | nindent 10 }}
       spec:
         containers:
         - image: {{ .Values.task.image.name }}:{{ .Values.task.image.tag }}
