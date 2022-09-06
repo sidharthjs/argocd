@@ -19,6 +19,8 @@ spec:
     maxRetry: {{ .Values.task.options.maxRetry.value }}
     template:
       metadata:
+        annotations:
+          sidecar.istio.io/inject: "false"
         labels:
           {{- if eq "Azure" .Values.infra.provider }}
           aadpodidbinding: {{ include "gravity-job.fullname" . }}
