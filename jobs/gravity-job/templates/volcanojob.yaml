@@ -84,6 +84,22 @@ spec:
           {{- end }}
           {{- end }}
           {{- end }}
+          # kubeSecrets
+          {{- range $index, $entry := .Values.kubeSecrets }}
+          {{- range $ei, $env := $entry.spec.env }}
+          - name: {{ $env.name }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ $entry.id }}
+                key: {{ $env.key }}
+          {{- end }}
+          {{- range $vi, $vol := $entry.spec.volumes }}
+          {{- if $vol.envName }}
+          - name: {{ $vol.envName }}
+            value: "{{ $vol.mountPath }}/{{ $vol.fileName }}"
+          {{- end }}
+          {{- end }}
+          {{- end }}
           # connections (env & secrets)
           {{- range $index, $conn := .Values.connections }}
           {{- range $ei, $env := $conn.env }}
