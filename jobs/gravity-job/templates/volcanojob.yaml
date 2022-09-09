@@ -128,6 +128,16 @@ spec:
           {{- end }}
           {{- end }}
           {{- end }}
+          # kubesecrets
+          {{- range $index, $entry := .Values.kubeSecrets }}
+          {{- range $index, $env := $entry.spec.envAll }}
+          - secretRef:
+              name: {{ $entry.id }}
+            {{- with $env.prefix }}
+            prefix: {{ . }}
+            {{- end }}
+          {{- end }}
+          {{- end }}
           volumeMounts:
           # configs
           {{- range $index, $entry := .Values.configs }}
@@ -157,6 +167,19 @@ spec:
           {{- if or $entry.spec.envAll $entry.spec.env }}
           - name: {{ $entry.spec.ref.name }}-env
             mountPath: /__grty_secrets/{{ $index }}/{{ $entry.spec.ref.name }}
+            readOnly: true
+          {{- end }}
+          {{- end }}
+          # kubeSecrets
+          {{- range $index, $entry := .Values.kubeSecrets }}
+          {{- range $vi, $vol := $entry.spec.volumes }}
+          - name: {{ $entry.spec.ref.name }}-{{ $vi }}
+            {{- if $vol.fileName }}
+            mountPath: {{ $vol.mountPath }}/{{ $vol.fileName }}
+            subPath: {{ $vol.fileName }}
+            {{- else }}
+            mountPath: {{ $vol.mountPath }}
+            {{- end }}
             readOnly: true
           {{- end }}
           {{- end }}
