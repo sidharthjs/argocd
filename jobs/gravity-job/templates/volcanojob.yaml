@@ -116,7 +116,6 @@ spec:
           {{- end }}
           {{- end }}
           {{- end }}
-          {{- if .Values.volumes }}
           envFrom:
           {{- range $index, $entry := .Values.configs }}
           {{- range $index, $env := $entry.spec.envAll }}
@@ -125,7 +124,6 @@ spec:
             {{- with $env.prefix }}
             prefix: {{ . }}
             {{- end }}
-          {{- end }}
           {{- end }}
           {{- end }}
           # kubesecrets
