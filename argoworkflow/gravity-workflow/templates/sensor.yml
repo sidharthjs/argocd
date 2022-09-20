@@ -1,6 +1,6 @@
 {{- $appname := include "app.fullname" . }}
 
-{{- if .Values.workflows }}
+{{- if .Values.jobs }}
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Sensor
@@ -14,7 +14,7 @@ spec:
       eventSourceName: {{ $appname }}
       eventName: default
   triggers:
-    {{- range $wfi, $wf := .Values.workflows }}
+    {{- range $wfi, $wf := .Values.jobs }}
     - template:
         name: {{$appname}}-{{$wf.name}}-trigger
         argoWorkflow:
