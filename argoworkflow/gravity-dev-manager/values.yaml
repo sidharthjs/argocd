@@ -73,26 +73,50 @@ identity:
 #   configMapName: es-kafka-1-workflow-whalesay
 #   name: wrkflw-kafka-1
 
-infra:
-  id: ""
-  props: {}
-  provider: Azure
-  region: eastus
-instance: wrkflw-dev-es-interval-1-d6f0d25b
-type: Calendar
-properties:
-  interval: 1m
-jobs:
-- configMapKey: template
-  configMapName: job-nginx
-  name: gravity-job-calendar-1
-kube:
-  engine: AKS
-  name: dev-devaks-b98277ab
-  oidc:
-    id: ""
-  uint32: "1560134030"
-  version: 1.21.9
-monit:
-  enabled: false
-project: dev
+# infra:
+#   id: ""
+#   props: {}
+#   provider: Azure
+#   region: eastus
+# instance: wrkflw-dev-es-interval-1-d6f0d25b
+# type: Calendar
+# properties:
+#   interval: 1m
+# jobs:
+# - configMapKey: template
+#   configMapName: job-nginx
+#   name: gravity-job-calendar-1
+# kube:
+#   engine: AKS
+#   name: dev-devaks-b98277ab
+#   oidc:
+#     id: ""
+#   uint32: "1560134030"
+#   version: 1.21.9
+# monit:
+#   enabled: false
+# project: dev
+
+# id: es-interval-1
+# identity:
+#   create: false
+# infra:
+#   id: ""
+#   props: {}
+#   provider: Azure
+#   region: eastus
+# instance: wrkflw-dev-es-interval-1-ebf7c28f
+# kube:
+#   engine: AKS
+#   name: dev-dev2-workload-352c2412
+#   oidc:
+#     id: ""
+#   uint32: "469953889"
+#   version: 1.23.8
+# monit:
+#   enabled: false
+# project: dev
+# properties:
+#   interval: 2m
+#   userPayload: hello
+# type: Calendar
