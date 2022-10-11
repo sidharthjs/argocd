@@ -23,11 +23,11 @@ spec:
             configmap:
               name: {{ $wf.configMapName }}
               key: {{ default "template" $wf.configMapKey }}
-          parameters:
-            - src:
-                dependencyName: default
-                dataKey: body
-              dest: spec.arguments.parameters.{{ $wf.argIndex | default 0 }}.value
+          # parameters:
+          #   - src:
+          #       dependencyName: default
+          #       dataKey: body
+          #     dest: spec.arguments.parameters.{{ $wf.argIndex | default 0 }}.value
     {{- end }}
 
 ---
