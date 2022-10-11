@@ -1,0 +1,65 @@
+{{- $appname := include "app.fullname" . }}
+
+{{- if .Values.identity.create }}
+---
+apiVersion: identity-manager.io/v1alpha1
+kind: WorkloadIdentity
+metadata:
+  name: {{ $appname }}
+  labels:
+    {{- include "app.labels" $ | nindent 4 }}
+spec:
+  description: "identity for workload: {{ $appname }} running in kube: {{ .Values.kube.name }}"	
+  name: {{ .Values.kube.name }}-{{ $appname }}
+  provider: {{ .Values.infra.provider }}	
+  {{- if eq "AWS" .Values.infra.provider }}
+  aws:
+    assumeRolePolicy: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Principal": {
+              "Federated": "arn:aws:iam::{{ .Values.infra.id }}:oidc-provider/oidc.eks.{{ .Values.infra.region }}.amazonaws.com/id/{{ .Values.kube.oidc.id }}"
+            },
+            "Action": "sts:AssumeRoleWithWebIdentity",
+            "Condition": {
+              "StringEquals": {
+                "oidc.eks.{{ .Values.infra.region }}.amazonaws.com/id/{{ .Values.kube.oidc.id }}:sub": "system:serviceaccount:{{ .Release.Namespace }}:{{ $appname }}-eventsource"
+              }
+            }
+          }
+        ]
+      }
+    inlinePolicies:
+      {{- if eq "sqs" .Values.type }}
+      sqs-read: |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "sqs:GetQueueUrl",
+                "sqs:ReceiveMessage",
+                "sqs:DeleteMessage"
+              ],
+              "Resource": [
+                "{{ .Values.properties.queue }}"
+              ]
+            }
+          ]
+        }
+      {{- end }}
+    maxSessionDuration: 3600
+    path: "/"
+    pods:
+      - matchLabels:
+          {{- include "app.selectorLabels" . | nindent 10 }}
+    serviceAccounts:
+      - action: Create
+        name: "{{ $appname }}-eventsource"
+        namespace: {{ .Release.Namespace }}
+  {{- end }}
+{{- end }}

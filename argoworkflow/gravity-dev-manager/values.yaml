@@ -1,0 +1,98 @@
+
+# # workflow id
+# id: ""
+# # workload instance (resource apply name)
+# instance: "1"
+# component: ""
+# partOf: ""
+# #managedBy: ""
+# createdBy: ""
+# project: ""
+
+# # global
+# infra: ~
+# kube: ~
+
+# # identity
+# identity:
+#   create: true
+
+# # eventsource
+# type: ""
+# properties: {}
+
+# # workflows
+# workflows: []
+
+sensor:
+  clusterRoles:
+    - operate-job-role
+    # - argo-workflows-role
+
+kafka:
+  connectionBackoff:
+    duration: 10s
+    steps: 5
+    factor: 2
+    jitter: 0.2
+
+id: es-kafka-1
+identity:
+  create: false
+# infra:
+#   id: ""
+#   props: {}
+#   provider: Azure
+#   region: eastus
+# instance: wrkflw-dev-es-kafka-1-f826f265
+# kube:
+#   engine: AKS
+#   name: dev-devaks-b98277ab
+#   oidc:
+#     id: ""
+#   uint32: "1560134030"
+#   version: 1.21.9
+# monit:
+#   enabled: false
+# project: dev
+# properties:
+#   partition: "0"
+#   sasl:
+#     mechanism: SCRAM-SHA-256
+#     passwordSecret:
+#       key: password
+#       name: kafka-access-es-kafka-1
+#     userSecret:
+#       key: user
+#       name: kafka-access-es-kafka-1
+#   topic: ajf18st7-default
+#   url: moped-01.srvs.cloudkafka.com:9094,moped-02.srvs.cloudkafka.com:9094,moped-03.srvs.cloudkafka.com:9094
+# type: Kafka
+# workflows:
+# - configMapKey: template
+#   configMapName: es-kafka-1-workflow-whalesay
+#   name: wrkflw-kafka-1
+
+infra:
+  id: ""
+  props: {}
+  provider: Azure
+  region: eastus
+instance: wrkflw-dev-es-interval-1-d6f0d25b
+type: Calendar
+properties:
+  interval: 1m
+jobs:
+- configMapKey: template
+  configMapName: job-nginx
+  name: gravity-job-calendar-1
+kube:
+  engine: AKS
+  name: dev-devaks-b98277ab
+  oidc:
+    id: ""
+  uint32: "1560134030"
+  version: 1.21.9
+monit:
+  enabled: false
+project: dev

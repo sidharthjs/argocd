@@ -1,0 +1,25 @@
+id: interval-es-1
+infra:
+  id: ""
+  props:
+    allowed_regions: eastus
+    domainResourceGroups: demo,markerplace
+    resourceGroup: gravity-platform
+    subscriptionId: 766fbc6c-e228-4aa9-b878-93fa2f45245e
+    tenantId: 6aaaf7bc-af1f-4b6f-8040-33e62afe567b
+  provider: Azure
+  region: eastus
+instance: wrkflw-dev-interval-es-1-67c5bbd0
+kube:
+  engine: AKS
+  name: dev-develop-aks-f90850e7
+  oidc:
+    id: ""
+  uint32: "856783643"
+  version: 1.21.9
+monit:
+  enabled: false
+project: dev
+properties:
+  interval: "1"
+  userPayload: '{"foo":"bar"}'

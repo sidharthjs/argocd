@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: wrkflw-dev-es-sqs-912
+  namespace: argocd
+spec:
+  destination:
+    name: in-cluster
+    namespace: gravity-system
+  project: default
+  revisionHistoryLimit: 0
+  source:
+    helm:
+      values: |
+        eventsource:
+          name: test 
+    path: argoworkflow/gravity-workflow
+    repoURL: https://github.com/sidharthjs/argocd
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

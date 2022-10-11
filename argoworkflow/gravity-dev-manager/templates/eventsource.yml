@@ -1,0 +1,111 @@
+{{- $appname := include "app.fullname" . }}
+
+apiVersion: argoproj.io/v1alpha1
+kind: EventSource
+metadata:
+  name: {{ $appname }}
+spec:
+  {{- if eq .Values.type "SQS" }}
+  sqs:
+    default:
+      jsonBody: {{ .Values.properties.jsonBody }}
+      waitTillSeconds: {{ .Values.properties.waitTillSeconds }}
+      queue: {{ (split ":" .Values.properties.queue )._5 }}
+      {{- if eq .Values.infra.provider "Azure" }}
+      region: {{ .Values.properties.region }}
+      accessKey:
+        key: {{ .Values.properties.accessKey.key }}
+        name: {{ .Values.properties.accessKey.name }}
+      secretKey:
+        key: {{ .Values.properties.secretKey.key }}
+        name: {{ .Values.properties.secretKey.name }}
+      {{- end }}
+  {{- end }}
+  {{- if eq .Values.type "AzureEventsHub" }}
+  azureEventsHub:
+    default:
+      {{- toYaml .Values.properties | nindent 6 }}
+  {{- end }}
+  {{- if eq .Values.type "Calendar" }}
+  calendar:
+    default:
+      {{- toYaml .Values.properties | nindent 6 }}
+  {{- end }}
+  {{- if eq .Values.type "Redis" }}
+  redis:
+    default:
+      {{- toYaml .Values.properties | nindent 6 }}
+  {{- end }}
+  {{- if eq .Values.type "Kafka" }}
+  kafka:
+    default:
+      {{- toYaml .Values.properties | nindent 6 }}
+      connectionBackoff:
+        {{- toYaml $.Values.kafka.connectionBackoff | nindent 8}}
+      tls:
+        insecureSkipVerify: true  
+  {{- end }}
+  {{- if eq .Values.type "Resource" }}
+  resource:
+    default:
+      namespace: {{ .Values.properties.namespace }}
+      group: {{ .Values.properties.group }}
+      version: {{ .Values.properties.version }}
+      resource: {{ .Values.properties.resource }}
+      eventTypes:
+      {{- range $key, $val := .Values.properties.eventTypes }}
+        - {{ $val }}
+      {{- end }}
+      filter:
+        afterStart: {{ .Values.afterStart }}
+        {{- if .Values.properties.filter.labels }}
+        labels:
+          {{- range $val := .Values.properties.filter.labels}}
+          - key: {{ (split ":" $val)._0 }}
+            value: {{ (split ":" $val)._1 }}
+          {{- end }}
+        {{- end}}
+  {{- end }}
+  template:
+    metadata:
+      labels:
+      {{- include "app.labels" $ | nindent 8 }}
+    {{- if eq .Values.type "Resource" }}
+    serviceAccountName: {{ $appname }}-sa
+    {{- end }}
+
+{{- if eq .Values.type "Resource" }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ $appname }}-role
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - {{ .Values.properties.resource }}
+    verbs:
+      - get
+      - watch
+      - list
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ $appname }}-role-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ $appname }}-role
+subjects:
+  - kind: ServiceAccount
+    name: {{ $appname }}-sa
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ $appname }}-sa
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+{{- end }}

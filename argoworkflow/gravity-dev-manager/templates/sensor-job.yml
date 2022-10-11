@@ -1,0 +1,56 @@
+{{- $appname := include "app.fullname" . }}
+
+{{- if .Values.jobs }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: {{ $appname }}
+spec:
+  template:
+    serviceAccountName: {{ $appname }}-sensor
+  dependencies:
+    - name: default
+      eventSourceName: {{ $appname }}
+      eventName: default
+  triggers:
+    {{- range $wfi, $wf := .Values.jobs }}
+    - template:
+        name: {{$appname}}-{{$wf.name}}-trigger
+        k8s:
+          operation: create
+          source:
+            configmap:
+              name: {{ $wf.configMapName }}
+              key: {{ default "template" $wf.configMapKey }}
+          parameters:
+            - src:
+                dependencyName: default
+                dataKey: body
+              dest: spec.arguments.parameters.{{ $wf.argIndex | default 0 }}.value
+    {{- end }}
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ $appname }}-sensor
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+
+{{- range $cri, $cr := .Values.sensor.clusterRoles }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ $appname }}-{{ $cri }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ $cr }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ $appname }}-sensor
+{{- end }}
+
+{{- end }}

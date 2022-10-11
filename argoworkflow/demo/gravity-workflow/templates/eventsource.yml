@@ -1,0 +1,18 @@
+{{- $fullname := include "app.fullname" . }}
+
+apiVersion: argoproj.io/v1alpha1
+kind: EventSource
+metadata:
+  name: {{ $fullname }}
+spec:
+  {{- if eq "sqs" .Values.type }}
+  sqs:
+    default:
+      {{- .Values.properties | nindent 6 }}
+      region: {{ .Values.infra.region }}
+  {{- end }}
+  template:
+    metadata:
+      labels:
+        {{- include "app.labels" . | nindent 8 }}
+    serviceAccountName: {{ $fullname }}-es
