@@ -26,8 +26,9 @@
 
 sensor:
   clusterRoles:
-    - operate-job-role
+    # - operate-job-role
     # - argo-workflows-role
+    - operate-vc-role
 
 kafka:
   connectionBackoff:
