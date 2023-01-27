@@ -1,0 +1,54 @@
+metadata:
+  creationTimestamp: "2023-01-27T05:18:43Z"
+  labels:
+    app: nginx
+  managedFields:
+  - apiVersion: v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:labels:
+          .: {}
+          f:app: {}
+      f:spec:
+        f:externalTrafficPolicy: {}
+        f:internalTrafficPolicy: {}
+        f:ports:
+          .: {}
+          k:{"port":80,"protocol":"TCP"}:
+            .: {}
+            f:name: {}
+            f:port: {}
+            f:protocol: {}
+            f:targetPort: {}
+        f:selector: {}
+        f:sessionAffinity: {}
+        f:type: {}
+    manager: kubectl-create
+    operation: Update
+    time: "2023-01-27T05:18:43Z"
+  name: nginx
+  namespace: default
+  resourceVersion: "124317"
+  uid: 3431b3ab-57c5-4e99-b1d1-96a2dabfb3bc
+spec:
+  clusterIP: 10.43.23.33
+  clusterIPs:
+  - 10.43.23.33
+  externalTrafficPolicy: Cluster
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: 80-80
+    nodePort: 31842
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: nginx
+  sessionAffinity: None
+  type: NodePort
+status:
+  loadBalancer: {}
