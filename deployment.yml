@@ -1,7 +1,6 @@
 Object:
-  metadata:
-    managedFields: []
-oyment
+  apiVersion: apps/v1
+  kind: Deployment
   metadata:
     annotations:
       deployment.kubernetes.io/revision: "1"
