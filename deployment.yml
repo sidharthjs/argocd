@@ -17,7 +17,7 @@ Object:
     managedFields: []
     name: metrics-server
     namespace: kube-system
-    resourceVersion: "123471"
+    resourceVersion: "148487"
     uid: 5997ae85-1db9-4d66-9c99-9581ec7257ee
   spec:
     progressDeadlineSeconds: 600
@@ -114,8 +114,8 @@ Object:
       reason: NewReplicaSetAvailable
       status: "True"
       type: Progressing
-    - lastTransitionTime: "2023-01-27T04:17:26Z"
-      lastUpdateTime: "2023-01-27T04:17:26Z"
+    - lastTransitionTime: "2023-01-29T13:48:16Z"
+      lastUpdateTime: "2023-01-29T13:48:16Z"
       message: Deployment has minimum availability.
       reason: MinimumReplicasAvailable
       status: "True"
