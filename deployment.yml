@@ -2,29 +2,23 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    deployment.kubernetes.io/revision: "1"
-    objectset.rio.cattle.io/applied: H4sIAAAAAAAA/6xV328bNwz+VwY+3zl24jTrAX4IkmwttmbGku2lyIMs0bFmnaSRPDeecf/7QJ2TuUjTbMXeeCL16ePHH7cDk/3vSOxThAZMzny0mUAFax8dNHCJOaRti1GgghbFOCMGmh2YGJMY8SmyfqbFH2iFUUbk08gakYAjn468gkD1oj99ikj1/WYNDaxP+MCzmVTf/eSjm507l+KrENG0CI1SJG+5ZqQNUu0O6b8OwNlYRVl3C6x5y4It9BUEs8BQ0lx/z7XJ+dlDX0FfGV5BAzgZ4/H0FCcnOH1jzo5P7VvnnJsu3+Li+OTtcjI9OzubLp2+98VcYDh/gSJntEqQMaCVRGq3Ruzq59e5930Fgm0ORrDcOyjzv0j9RcIHtGyKYnxEYmg+7sDQvRpQ1xZJaudpdiRthgrqmtF2hHVOJLPpdHpSDjXbgFJnwiUSoauNc4TMtWwz8ux9FKRowvt5dfXwZL5LLIXaIUTHWMfksGYx0nF5qAQM7GtCTqHTxp5NThnuKvCtudf0yES7QjpqPVFSDp/n22zGo9PRMVQQ/AYjMs8pLYqiS+NDR3i7IuRVCg6akwpWIvlHFPVnI9ojR3rxL6igcGpKBEMFbFdYBH53ezu/UV199OJNuMRgtjdoU3QMzZtxBRnJJ/d0NBlXwJ21yHzw+KQC8S2mTv4J/ErbKZuhbk9lnBeCWp6na49kMyVJNgVo4PZiDv1dBYTG+W8SRG9uv12R54Ic/wc9tBM6sljan/DPDlmKbXMHDUzG47YsxTbRFho4G3/wZZZKB3vZXqQo+FDyMSGkT3PyGx/wHq/YmlB2JzRLExgHiX6JYftrSvKDD7if7EaoU28Xz/k6RfV+dvYbI2mVx+O+gk0KXYsfUhf35WrVnO+lHOZrXyxps04d9Hdan0w+FcLBMF8PEQOBYVIsefHWBBUeaeMtnlur2NcvdIykgPT4c/i4gzWqQBd7mLLQWbPVtZk1UhcWXD14FbivdoDLJVot+HW6sSt0XdAhHmAKJUoBRzrSFFGQddFqc1IKdQ4m4v+K3BqWYcc/h7x71H3IFNss20uv+7f/ktp93/8dAAD//zbPSKBzBwAA
-    objectset.rio.cattle.io/id: ""
-    objectset.rio.cattle.io/owner-gvk: k3s.cattle.io/v1, Kind=Addon
-    objectset.rio.cattle.io/owner-name: metrics-server-deployment
-    objectset.rio.cattle.io/owner-namespace: kube-system
-  creationTimestamp: "2023-01-09T20:44:27Z"
-  generation: 1
-  labels:
-    k8s-app: metrics-server
-    objectset.rio.cattle.io/hash: e10e245e13e46a725c9dddd4f9eb239f147774fd
+    deployment.kubernetes.io/revision: "3"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"nginx","namespace":"default"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"nginx"}},"template":{"metadata":{"labels":{"app":"nginx"}},"spec":{"containers":[{"image":"nginx:1.14.2","name":"nginx","ports":[{"containerPort":80}],"volumeMounts":[{"mountPath":"/usr/share/nginx/html/index.html","name":"mnt","subPath":"file-from-cfgmap"}]}],"serviceAccountName":"nginx","volumes":[{"configMap":{"name":"nginx-cfgmap"},"name":"mnt"}]}}}}
+  creationTimestamp: "2023-01-29T21:19:02Z"
+  generation: 3
   managedFields: []
-  name: metrics-server
-  namespace: kube-system
-  resourceVersion: "148487"
-  uid: 5997ae85-1db9-4d66-9c99-9581ec7257ee
+  name: nginx
+  namespace: default
+  resourceVersion: "163257"
+  uid: e1a11dae-8543-4906-ae0f-f168007c0a21
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      k8s-app: metrics-server
+      app: nginx
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -34,20 +28,54 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        k8s-app: metrics-server
-      name: metrics-server
+        app: nginx
     spec:
       containers:
-      - args:
-        - --cert-dir=/tmp
-        - --secure-port=4443
-        - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
-        - --kubelet-use-node-status-port
-        - --metric-resolution=15s
-        image: rancher/mirrored-metrics-server:v0.5.2
+      - image: nginx:1.14.2
         imagePullPolicy: IfNotPresent
-        livenessProbe:
-          failureThreshold: 3
+        name: nginx
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /usr/share/nginx/html/index.html
+          name: mnt
+          subPath: file-from-cfgmap
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: nginx
+      serviceAccountName: nginx
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: nginx-cfgmap
+        name: mnt
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2023-01-29T21:19:13Z"
+    lastUpdateTime: "2023-01-29T21:19:13Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2023-01-29T21:19:02Z"
+    lastUpdateTime: "2023-01-29T21:45:06Z"
+    message: ReplicaSet "nginx-66475fb646" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  observedGeneration: 3
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1
+ailureThreshold: 3
           httpGet:
             path: /livez
             port: https
