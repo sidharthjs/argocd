@@ -4,13 +4,15 @@ metadata:
   annotations:
     deployment.kubernetes.io/revision: "3"
     kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"nginx","namespace":"default"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"nginx"}},"template":{"metadata":{"labels":{"app":"nginx"}},"spec":{"containers":[{"image":"nginx:1.14.2","name":"nginx","ports":[{"containerPort":80}],"volumeMounts":[{"mountPath":"/usr/share/nginx/html/index.html","name":"mnt","subPath":"file-from-cfgmap"}]}],"serviceAccountName":"nginx","volumes":[{"configMap":{"name":"nginx-cfgmap"},"name":"mnt"}]}}}}
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"nginx"},"name":"nginx","namespace":"default"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"nginx"}},"template":{"metadata":{"labels":{"app":"nginx"}},"spec":{"containers":[{"image":"nginx:1.14.2","name":"nginx","ports":[{"containerPort":80}],"volumeMounts":[{"mountPath":"/usr/share/nginx/html/index.html","name":"mnt","subPath":"file-from-cfgmap"}]}],"serviceAccountName":"nginx","volumes":[{"configMap":{"name":"nginx-cfgmap"},"name":"mnt"}]}}}}
   creationTimestamp: "2023-01-29T21:19:02Z"
-  generation: 3
+  generation: 4
+  labels:
+    app: nginx
   managedFields: []
   name: nginx
   namespace: default
-  resourceVersion: "163257"
+  resourceVersion: "164092"
   uid: e1a11dae-8543-4906-ae0f-f168007c0a21
 spec:
   progressDeadlineSeconds: 600
@@ -71,7 +73,7 @@ status:
     reason: NewReplicaSetAvailable
     status: "True"
     type: Progressing
-  observedGeneration: 3
+  observedGeneration: 4
   readyReplicas: 1
   replicas: 1
   updatedReplicas: 1
