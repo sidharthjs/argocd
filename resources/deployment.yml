@@ -16,6 +16,7 @@ spec:
     type: RollingUpdate
   template:
     metadata:
+      creationTimestamp: null
       labels:
         app: nginx
     spec:
@@ -45,8 +46,7 @@ spec:
           defaultMode: 420
           name: nginx-cfgmap
         name: mnt
-axUnavailable: 25%
-    type: RollingUpdate
+ollingUpdate
   template:
     metadata:
       creationTimestamp: null
