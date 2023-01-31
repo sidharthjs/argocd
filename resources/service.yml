@@ -12,13 +12,13 @@ spec:
   ipFamilies:
   - IPv4
   ipFamilyPolicy: SingleStack
+  ports:
+  - nodePort: 32414
+    port: 80
+    protocol: TCP
+    targetPort: 80
   selector:
     app: nginx
-  sessionAffinity: None
-  type: LoadBalancer
-status:
-  loadBalancer: {}
- nginx
   sessionAffinity: None
   type: LoadBalancer
 status:
