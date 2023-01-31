@@ -39,9 +39,9 @@ metadata:
   namespace: default
   resourceVersion: "164473"
   uid: 7214292f-e14a-49bc-b95d-a3913175bd73
-spec:
-  allocateLoadBalancerNodePorts: true
-  clusterIP: 10.43.116.9
+status:
+  loadBalancer: {}
+usterIP: 10.43.116.9
   clusterIPs:
   - 10.43.116.9
   externalTrafficPolicy: Cluster
