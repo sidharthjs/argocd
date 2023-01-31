@@ -39,11 +39,8 @@ metadata:
   namespace: default
   resourceVersion: "164473"
   uid: 7214292f-e14a-49bc-b95d-a3913175bd73
-status:
-  loadBalancer: {}
-usterIP: 10.43.116.9
-  clusterIPs:
-  - 10.43.116.9
+spec:
+  allocateLoadBalancerNodePorts: true
   externalTrafficPolicy: Cluster
   internalTrafficPolicy: Cluster
   ipFamilies:
@@ -58,5 +55,8 @@ usterIP: 10.43.116.9
     app: nginx
   sessionAffinity: None
   type: LoadBalancer
+status:
+  loadBalancer: {}
+lancer
 status:
   loadBalancer: {}
