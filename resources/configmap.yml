@@ -1,0 +1,9 @@
+apiVersion: v1
+data:
+  file-from-cfgmap: "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <title>From
+    config map</title>\n  </head>\n  <body>\n  \n    <h1>Loaded from config map!</h1>\n
+    \ \n  </body>\n</html>\n"
+kind: ConfigMap
+metadata:
+  annotations: {}
+  name: nginx-cfgmap
