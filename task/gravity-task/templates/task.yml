@@ -1,0 +1,18 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: {{ .Values.name }}
+spec:
+  steps:
+  {{- range $step := .Values.steps }}
+  - name: {{ $step.name }}
+    image: {{ $step.image }}
+    command:
+    {{- range $cmd := $step.command }}
+    - {{ $cmd | quote }}
+    {{- end }}
+    args:
+    {{- range $arg := $step.args }}
+    - {{ $arg | quote }}
+    {{- end }}
+  {{- end }}
